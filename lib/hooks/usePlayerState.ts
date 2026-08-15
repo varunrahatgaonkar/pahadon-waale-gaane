@@ -116,17 +116,19 @@ export function usePlayerState() {
     }
   }, [isShuffle]);
 
-  const handleSelectTrackIndex = useCallback((index: number) => {
-    console.log(`[Pahado Player Hook] Selecting track index: ${index}`);
+  const handleSelectTrackIndex = useCallback((index: number, videoId?: string) => {
+    console.log(`[Pahado Player Hook] Selecting track index: ${index}, videoId: ${videoId}`);
     if (ytPlayerRef.current) {
       try {
-        if (typeof ytPlayerRef.current.playVideoAt === "function") {
+        if (videoId && typeof ytPlayerRef.current.loadVideoById === "function") {
+          ytPlayerRef.current.loadVideoById(videoId);
+        } else if (typeof ytPlayerRef.current.playVideoAt === "function") {
           ytPlayerRef.current.playVideoAt(index);
         } else {
           ytPlayerRef.current.playVideo();
         }
       } catch (err) {
-        console.error("[Pahado Player Hook] Error playing video at index:", err);
+        console.error("[Pahado Player Hook] Error playing video at index/ID:", err);
       }
     }
   }, []);

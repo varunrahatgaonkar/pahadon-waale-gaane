@@ -15,6 +15,7 @@ export interface YTPlayerInstance {
   getPlayerState?: () => number;
   setShuffle?: (shuffle: boolean) => void;
   playVideoAt?: (index: number) => void;
+  loadVideoById?: (videoId: string) => void;
   setLoop?: (loopPlaylists: boolean) => void;
 }
 
@@ -56,14 +57,31 @@ function parseYouTubeTrack(rawTitle?: string, author?: string): { title: string;
 
   // Clean common YouTube noise
   const cleaned = rawTitle
-    .replace(/[\(\[\{](official|lyric|video|hd|4k|audio|full song|visualizer|remastered|music video).*?[\)\]\}]/gi, "")
+    .replace(/[\(\[\{].*?(official|lyric|video|hd|4k|audio|full song|visualizer|remastered|music video|lyrics).*?[\)\]\}]/gi, "")
     .trim();
 
+  // Handle quoted song titles: e.g. Highway: "Maahi Ve"
+  const quoteMatch = cleaned.match(/(?:(.*?):)?\s*["'“]([^"'”]+)["'”]/);
+  if (quoteMatch) {
+    const moviePrefix = quoteMatch[1] ? quoteMatch[1].trim() : "";
+    const songTitle = quoteMatch[2].trim();
+    const afterPart = cleaned.replace(quoteMatch[0], "").replace(/[-|:]/g, "").trim();
+
+    let movieOrArtist = [moviePrefix, afterPart].filter(Boolean).join(" • ");
+    if (!movieOrArtist) movieOrArtist = author || "Radio Pahad";
+
+    return {
+      title: songTitle,
+      artist: movieOrArtist,
+    };
+  }
+
+  // Split on - or | or :
   const parts = cleaned.split(/\s+[-|:]\s+/);
   if (parts.length >= 2) {
     return {
-      artist: parts[0].trim(),
-      title: parts[1].trim(),
+      title: parts[0].trim(),
+      artist: parts.slice(1).join(" • ").trim(),
     };
   }
 
