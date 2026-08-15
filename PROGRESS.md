@@ -41,3 +41,10 @@ Did: Built reusable `components/NowPlayingBar.tsx` bottom translucent strip (`ba
 Decisions made: Component is fully UI-controlled via clean props/callbacks, ready to connect to player state.
 Blocked on / open questions: None for NowPlayingBar.
 Files touched: `components/NowPlayingBar.tsx`, `PROGRESS.md`
+
+## [2026-08-15 13:28] — Antigravity
+Task(s) worked: [2. Design → code - ShareButton](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/TASKS.md#2-design--code-via-stitch--antigravity)
+Did: Built reusable `components/ShareButton.tsx` pill component using Web Share API (`navigator.share`) with fallback to clipboard copy (`navigator.clipboard.writeText`) and temporary visual confirmation ("कॉपी हो गया!"). Includes accessible `aria-label` and keyboard focus state.
+Decisions made: Used frosted glass pill styling matching theme tokens (`#F7EFE2`/15 backdrop-blur).
+Blocked on / open questions: None for ShareButton.
+Files touched: `components/ShareButton.tsx`, `PROGRESS.md`
