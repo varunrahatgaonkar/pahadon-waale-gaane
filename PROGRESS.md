@@ -48,3 +48,10 @@ Did: Built reusable `components/ShareButton.tsx` pill component using Web Share 
 Decisions made: Used frosted glass pill styling matching theme tokens (`#F7EFE2`/15 backdrop-blur).
 Blocked on / open questions: None for ShareButton.
 Files touched: `components/ShareButton.tsx`, `PROGRESS.md`
+
+## [2026-08-15 13:31] — Antigravity
+Task(s) worked: [3. Music player integration - playlist config](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/TASKS.md#3-music-player-integration)
+Did: Created strongly-typed `lib/playlist.ts` configuration containing real playlist IDs (`spotifyPlaylistId: "0sPtH0QaSeu2Hcxahtry8K"`, `youtubePlaylistId: "PLpBEVvHYIhR6UfahyxrMpCRoZNYEdavK0"`) and site metadata.
+Decisions made: Centralized configuration and types for player consumption without inventing fake track structures.
+Blocked on / open questions: None for lib/playlist.ts.
+Files touched: `lib/playlist.ts`, `PROGRESS.md`
