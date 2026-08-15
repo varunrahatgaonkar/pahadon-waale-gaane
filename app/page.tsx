@@ -23,13 +23,10 @@ export default function Home() {
 
   return (
     <PlayerScene>
-      {/* Top Header Fixed Navigation Elements - Fixed strictly to top edge */}
-      <div className="fixed top-4 right-4 sm:top-6 sm:right-8 z-40">
-        <ShareButton />
-      </div>
-
-      <div className="fixed top-4 left-4 sm:top-6 sm:left-auto sm:left-1/2 sm:-translate-x-1/2 z-40">
+      {/* Top Header Navigation Group - Fixed in Top Right Corner with zero title overlap */}
+      <div className="fixed top-4 right-4 sm:top-6 sm:right-8 z-40 flex items-center gap-2.5 sm:gap-3 pointer-events-auto">
         <LiveListenersBadge />
+        <ShareButton />
       </div>
 
       {/* Hero Center - Clean Unobscured Scene View */}

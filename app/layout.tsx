@@ -17,6 +17,11 @@ const hind = Hind({
 export const metadata: Metadata = {
   title: "पहाड़ों वाले गाने | Pahado Wale Gaane",
   description: "gaane jo pahadiyon mein hi sahi lagte the. before Wi-Fi, before Google Maps ki 'no signal', bus ke radio pe yehi bajta tha.",
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

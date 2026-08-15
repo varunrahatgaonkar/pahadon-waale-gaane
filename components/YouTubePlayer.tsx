@@ -12,6 +12,7 @@ export interface YTPlayerInstance {
   getVideoData: () => { title?: string; author?: string };
   getCurrentTime?: () => number;
   getDuration?: () => number;
+  getPlayerState?: () => number;
 }
 
 export interface YTPlayerEvent {
@@ -24,12 +25,8 @@ declare global {
     onYouTubeIframeAPIReady?: () => void;
     YT?: {
       Player: new (
-        elementId: string,
+        elementId: string | HTMLElement,
         options: {
-          height?: string | number;
-          width?: string | number;
-          host?: string;
-          playerVars?: Record<string, string | number>;
           events?: {
             onReady?: (event: YTPlayerEvent) => void;
             onStateChange?: (event: YTPlayerEvent) => void;
@@ -53,6 +50,7 @@ interface YouTubePlayerProps {
 
 export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerProps) {
   const playerRef = useRef<YTPlayerInstance | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const onPlayerReadyRef = useRef(onPlayerReady);
   const onStateChangeRef = useRef(onStateChange);
 
@@ -64,67 +62,56 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
   useEffect(() => {
     let isMounted = true;
 
-    const initPlayer = () => {
-      if (!window.YT || !window.YT.Player) return;
+    const attachPlayer = () => {
+      if (!window.YT || !window.YT.Player || !iframeRef.current) return;
 
-      const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
+      try {
+        playerRef.current = new window.YT.Player(iframeRef.current, {
+          events: {
+            onReady: (event: YTPlayerEvent) => {
+              if (isMounted) {
+                onPlayerReadyRef.current?.(event.target);
+              }
+            },
+            onStateChange: (event: YTPlayerEvent) => {
+              if (!isMounted) return;
+              const isPlaying = event.data === window.YT?.PlayerState.PLAYING;
+              let trackInfo = PLAYLIST_CONFIG.fallbackTrack;
 
-      playerRef.current = new window.YT.Player("youtube-hidden-player", {
-        height: "1",
-        width: "1",
-        host: "https://www.youtube.com",
-        playerVars: {
-          listType: "playlist",
-          list: PLAYLIST_CONFIG.youtubePlaylistId,
-          autoplay: 0,
-          controls: 0,
-          disablekb: 1,
-          fs: 0,
-          modestbranding: 1,
-          rel: 0,
-          enablejsapi: 1,
-          origin: origin,
-        },
-        events: {
-          onReady: (event: YTPlayerEvent) => {
-            if (isMounted) {
-              onPlayerReadyRef.current?.(event.target);
-            }
-          },
-          onStateChange: (event: YTPlayerEvent) => {
-            if (!isMounted) return;
-            const isPlaying = event.data === window.YT?.PlayerState.PLAYING;
-            let trackInfo = PLAYLIST_CONFIG.fallbackTrack;
-
-            if (event.target && typeof event.target.getVideoData === "function") {
-              const videoData = event.target.getVideoData();
-              if (videoData && videoData.title) {
-                const parts = videoData.title.split("-");
-                if (parts.length > 1) {
-                  trackInfo = {
-                    title: parts[1].trim(),
-                    artist: parts[0].trim(),
-                  };
-                } else {
-                  trackInfo = {
-                    title: videoData.title,
-                    artist: videoData.author || "Pahadi Classics",
-                  };
+              if (event.target && typeof event.target.getVideoData === "function") {
+                const videoData = event.target.getVideoData();
+                if (videoData && videoData.title) {
+                  const parts = videoData.title.split("-");
+                  if (parts.length > 1) {
+                    trackInfo = {
+                      title: parts[1].trim(),
+                      artist: parts[0].trim(),
+                    };
+                  } else {
+                    trackInfo = {
+                      title: videoData.title,
+                      artist: videoData.author || "Pahadi Classics",
+                    };
+                  }
                 }
               }
-            }
 
-            onStateChangeRef.current?.(isPlaying, trackInfo);
+              onStateChangeRef.current?.(isPlaying, trackInfo);
+            },
+            onError: () => {
+              if (isMounted) {
+                onStateChangeRef.current?.(false);
+              }
+            },
           },
-          onError: () => {
-            onStateChangeRef.current?.(false);
-          },
-        },
-      });
+        });
+      } catch (err) {
+        console.error("YouTube Player init error:", err);
+      }
     };
 
     if (window.YT && window.YT.Player) {
-      initPlayer();
+      attachPlayer();
     } else {
       const existingScript = document.getElementById("youtube-iframe-api");
       if (!existingScript) {
@@ -138,7 +125,7 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
       const prevCallback = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = () => {
         if (prevCallback) prevCallback();
-        if (isMounted) initPlayer();
+        if (isMounted) attachPlayer();
       };
     }
 
@@ -150,11 +137,16 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
     };
   }, []);
 
+  const embedUrl = `https://www.youtube-nocookie.com/embed/videoseries?list=${PLAYLIST_CONFIG.youtubePlaylistId}&enablejsapi=1&autoplay=0&controls=0&disablekb=1&fs=0&modestbranding=1&rel=0`;
+
   return (
-    <div
+    <iframe
+      ref={iframeRef}
       id="youtube-hidden-player"
-      className="absolute top-0 left-0 w-px h-px opacity-0 pointer-events-none -z-50 overflow-hidden"
-      aria-hidden="true"
+      src={embedUrl}
+      title="Pahado Wale Gaane YouTube Engine"
+      allow="autoplay; encrypted-media"
+      className="fixed bottom-0 right-0 w-16 h-16 opacity-0 pointer-events-none -z-50 overflow-hidden"
     />
   );
 }
