@@ -7,7 +7,7 @@ interface PlayerSceneProps {
 
 export function PlayerScene({ children }: PlayerSceneProps) {
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[#121416] select-none flex flex-col justify-between">
+    <div className="relative w-full h-[100dvh] overflow-hidden bg-[#121416] select-none flex flex-col justify-between">
       {/* Primary Hero Scene Image Carousel */}
       <HeroCarousel />
 
