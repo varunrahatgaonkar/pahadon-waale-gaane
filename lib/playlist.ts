@@ -15,105 +15,103 @@ export const PLAYLIST_CONFIG = {
     artist: "Radio Pahad • FM 92.7",
   },
 
-  // ─────────────────────────────────────────────────────────────────
-  // CURATED QUEUE — These video IDs are verified to allow embedding.
-  // Major label songs (T-Series, YRF, Saregama) often block embedding
-  // with Error 150. We avoid those here and use the channels/uploads
-  // that explicitly allow it.
+  // ─────────────────────────────────────────────────────────────────────────
+  // CURATED QUEUE — Real, verified YouTube video IDs.
+  // Sources used: Zee Music, Sony Music India, Dharma Movies, T-Series
   //
-  // YouTube embed-check: https://www.youtube.com/embed/<VIDEO_ID>
-  // If it plays in an iframe, it's embeddable.
-  // ─────────────────────────────────────────────────────────────────
+  // NOTE: Even verified IDs can throw Error 150 depending on region/browser.
+  // The player auto-skips those and moves to the next track.
+  // ─────────────────────────────────────────────────────────────────────────
   tracks: [
     {
-      id: "tCUFKiHkAMw",
+      id: "fmmuhxx-IQA",
       title: "Namo Namo",
       artist: "Kedarnath • Amit Trivedi",
       duration: "5:22",
     },
     {
-      id: "S-iFoLxsj4k",
-      title: "Channa Mereya",
-      artist: "Ae Dil Hai Mushkil • Arijit Singh",
-      duration: "4:49",
-    },
-    {
-      id: "wVUrHVKPDZE",
+      id: "cYPhd24b6_o",
       title: "Hawaayein",
       artist: "Jab Harry Met Sejal • Arijit Singh",
       duration: "4:50",
     },
     {
-      id: "4L0f0V-xhT4",
+      id: "284Ov7ysmfA",
+      title: "Channa Mereya",
+      artist: "Ae Dil Hai Mushkil • Arijit Singh",
+      duration: "4:49",
+    },
+    {
+      id: "6w67NOaRe-w",
       title: "Ilahi",
       artist: "Yeh Jawaani Hai Deewani • Arijit Singh",
       duration: "3:48",
     },
     {
-      id: "p6BZS78YQHA",
-      title: "Phir Le Aya Dil",
-      artist: "Barfi! • Rekha Bhardwaj",
-      duration: "4:16",
+      id: "jHNNsd7397w",
+      title: "Kabira (Encore)",
+      artist: "Yeh Jawaani Hai Deewani • Arijit Singh",
+      duration: "4:29",
     },
     {
-      id: "EDM3605BVKY",
-      title: "Safarnama",
-      artist: "Tamasha • Lucky Ali",
-      duration: "4:11",
-    },
-    {
-      id: "1LDc0ePiWF4",
+      id: "FqS_N9j4F3w",
       title: "Subhanallah",
-      artist: "Yeh Jawaani Hai Deewani • Shafqat Amanat Ali",
+      artist: "Yeh Jawaani Hai Deewani • Sreerama Chandra",
       duration: "4:09",
     },
     {
-      id: "4KdBHxdPu6I",
-      title: "Tu Jaane Na",
-      artist: "Ajab Prem Ki Ghazab Kahani • Atif Aslam",
-      duration: "4:50",
-    },
-    {
-      id: "s7P7H8Lz31k",
-      title: "Kasto Mazza",
-      artist: "Parineeta • Sonu Nigam",
-      duration: "4:50",
-    },
-    {
-      id: "9GKz-v8P5I0",
-      title: "Sham",
-      artist: "Aisha • Amit Trivedi",
-      duration: "4:44",
-    },
-    {
-      id: "g-w3s3x_88k",
-      title: "Tum Ho",
-      artist: "Rockstar • Mohit Chauhan",
-      duration: "4:13",
-    },
-    {
-      id: "dx4Teh-n3ks",
-      title: "Phir Se Udd Chala",
-      artist: "Rockstar • Mohit Chauhan",
-      duration: "4:31",
-    },
-    {
-      id: "FsUJZk7wQpA",
+      id: "T94PHkuydcw",
       title: "Kun Faya Kun",
       artist: "Rockstar • A.R. Rahman",
       duration: "7:52",
     },
     {
-      id: "djU4Lq_xJ7k",
-      title: "Kabira",
-      artist: "Yeh Jawaani Hai Deewani • Rekha Bhardwaj",
-      duration: "4:29",
+      id: "yW6b3tJ0O_Y",
+      title: "Phir Le Aya Dil",
+      artist: "Barfi! • Rekha Bhardwaj",
+      duration: "4:16",
     },
     {
-      id: "z3wAjzRKLl0",
-      title: "Kabira (Encore)",
-      artist: "Yeh Jawaani Hai Deewani • Arijit Singh",
-      duration: "3:10",
+      id: "YFEFoAD0_Nc",
+      title: "Tu Jaane Na",
+      artist: "Ajab Prem Ki Ghazab Kahani • Atif Aslam",
+      duration: "4:50",
+    },
+    {
+      id: "dNMgFGaNkpE",
+      title: "Tum Ho",
+      artist: "Rockstar • Mohit Chauhan",
+      duration: "4:13",
+    },
+    {
+      id: "bWi3XTm-XxE",
+      title: "Sadda Haq",
+      artist: "Rockstar • Mohit Chauhan",
+      duration: "5:11",
+    },
+    {
+      id: "3KShPwJPgLo",
+      title: "Phir Se Udd Chala",
+      artist: "Rockstar • Mohit Chauhan",
+      duration: "4:31",
+    },
+    {
+      id: "VwqKkj7xqEk",
+      title: "Ik Vaari Aa",
+      artist: "Raabta • Arijit Singh",
+      duration: "4:53",
+    },
+    {
+      id: "L_fMJFoTXTg",
+      title: "Aaya Na Tu",
+      artist: "Arjun Patiala • Guru Randhawa",
+      duration: "3:38",
+    },
+    {
+      id: "xIx_HbmRnfQ",
+      title: "Ae Watan",
+      artist: "Raazi • Arijit Singh",
+      duration: "4:03",
     },
   ] satisfies TrackMetadata[],
 };
