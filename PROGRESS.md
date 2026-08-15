@@ -62,3 +62,59 @@ Did: Implemented `components/YouTubePlayer.tsx` (YouTube IFrame API integration)
 Decisions made: Enforced single-provider rule via `usePlayerState` hook (switching providers or starting one automatically pauses/stops the other).
 Blocked on / open questions: None.
 Files touched: `components/YouTubePlayer.tsx`, `components/SpotifyEmbed.tsx`, `lib/hooks/usePlayerState.ts`, `app/page.tsx`, `PROGRESS.md`
+
+## [2026-08-15 13:50] — Antigravity
+Task(s) worked: [Design Audit & Experience Rework](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/DESIGN.md)
+Did: Audited and reworked the entire site UI to eliminate modern SaaS dashboard visual drift. Enhanced `PlayerScene.tsx` with signboard-style Devanagari title typography ("पहाड़ों वाले गाने") and nostalgic caption copy; refined `PlayButton.tsx` as a tactile brass radio dial knob; trimmed `NowPlayingBar.tsx` into a quiet, minimal bottom strip; made `SpotifyEmbed.tsx` non-intrusive.
+Decisions made: Prioritized environmental visual scene dominance and quiet UI per DESIGN.md. Preserved clean image slot/architecture for final approved scene asset.
+Blocked on / open questions: Final approved hero scene artwork asset (`/scene.webp` or `/scene.png` in `public/`).
+Files touched: `app/globals.css`, `components/PlayerScene.tsx`, `components/PlayButton.tsx`, `components/NowPlayingBar.tsx`, `components/SpotifyEmbed.tsx`, `app/page.tsx`, `PROGRESS.md`
+
+## [2026-08-15 14:00] — Antigravity
+Task(s) worked: [Final Visual Refinement Pass](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/DESIGN.md)
+Did: Bound canonical hero image `public/scene.png` to full-viewport Next.js `Image` component in `PlayerScene.tsx`. Updated memory caption to exact lines ("कुछ गाने रास्तों के लिए होते हैं।" / "बस चलती रहे, गाने बजते रहें।"). Made Spotify embed ultra-compact (`bg-black/80 backdrop-blur-md`), and slimmed `NowPlayingBar.tsx` to ensure scene dominance across mobile and desktop viewports.
+Decisions made: Used `/scene.png` as the hero background with minimal gradient overlay (`from-black/50 via-transparent to-black/70`) to preserve artwork visibility while maintaining text contrast.
+Blocked on / open questions: None.
+Files touched: `components/PlayerScene.tsx`, `components/SpotifyEmbed.tsx`, `components/NowPlayingBar.tsx`, `PROGRESS.md`
+
+## [2026-08-15 14:26] — Antigravity
+Task(s) worked: [Hero Carousel & Spotify iFrame Controller](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/DESIGN.md)
+Did: Downloaded 6 self-hosted mountain/mist images into `public/hero/` and created `components/HeroCarousel.tsx` for smooth crossfade transitions without external libraries. Updated `components/SpotifyEmbed.tsx` to load Spotify's official `iframe-api/v1` and export `SpotifyControllerInstance`, allowing the central `PlayButton` to control Spotify playback directly via `usePlayerState`.
+Decisions made: Used self-hosted images in `public/hero/` and zero external carousel npm packages per RULES.md.
+Blocked on / open questions: None.
+Files touched: `components/HeroCarousel.tsx`, `components/PlayerScene.tsx`, `components/SpotifyEmbed.tsx`, `lib/hooks/usePlayerState.ts`, `app/page.tsx`, `PROGRESS.md`
+
+## [2026-08-15 15:35] — Antigravity
+Task(s) worked: [Headless Spotify, Auto-Discovered Hero Images, Compact PlayButton & Live Listener Count](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/DESIGN.md)
+Did:
+1. Updated `components/SpotifyEmbed.tsx` to mount off-screen so Spotify playback runs headlessly without any widget floating or interfering visually with the site background.
+2. Created `app/api/hero-images/route.ts` to automatically scan `public/` and `public/hero/` for any images dropped in by the user without needing manual renaming or code edits.
+3. Compacted `components/PlayButton.tsx` (`w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32`) and balanced its hero scene composition.
+4. Added realtime active listener heartbeat counter (`app/api/listeners/route.ts` and `components/NowPlayingBar.tsx`), rendering a live indicator badge ("🟢 X लोग सुन रहे हैं") inspired by `truckwalas.vercel.app`.
+Decisions made: Used server-side dynamic filesystem scanning for instant image auto-discovery; mounted Spotify iFrame API off-screen for seamless widget-free audio playback.
+Blocked on / open questions: None.
+Files touched: `app/api/hero-images/route.ts`, `app/api/listeners/route.ts`, `components/HeroCarousel.tsx`, `components/SpotifyEmbed.tsx`, `components/PlayButton.tsx`, `components/NowPlayingBar.tsx`, `PROGRESS.md`
+
+## [2026-08-15 15:45] — Antigravity
+Task(s) worked: [Truckwalas Dashboard Layout & Header Share Positioning](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/DESIGN.md)
+Did:
+1. Created `components/MusicCard.tsx` inspired by the `truckwalas.vercel.app` reference layout featuring spinning disc thumbnail, track title, animated equalizer waveform, progress bar, media controls, and provider toggle in a dark translucent glass floating card at bottom-center.
+2. Created `components/LiveListenersBadge.tsx` positioned top-center ("🟢 28 Listening Live").
+3. Fixed `ShareButton.tsx` positioning to be anchored cleanly in the top-right header corner.
+Decisions made: Re-architected bottom player into a unified floating music dashboard card while anchoring status badges and share button cleanly across the top header.
+Blocked on / open questions: None.
+Files touched: `components/MusicCard.tsx`, `components/LiveListenersBadge.tsx`, `app/page.tsx`, `PROGRESS.md`
+
+## [2026-08-15 16:00] — Antigravity
+Task(s) worked: [Pusher Presence, Active Player Progress Bar, Unobscured Hero & Caption Update](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/DESIGN.md)
+Did:
+1. Installed `pusher` and `pusher-js`.
+2. Created `app/api/pusher/auth/route.ts` for presence channel authentication and `lib/pusher-client.ts` client instance.
+3. Built `lib/hooks/usePresenceCount.ts` subscribing to `"presence-site-visitors"`, rendering live member count in `LiveListenersBadge` top-center.
+4. Positioned `ShareButton` in top-right corner of the hero in the same header row opposite the listener count badge.
+5. Removed large center `PlayButton` from the hero so the visual artwork is completely unobscured; playback control lives solely in `MusicCard.tsx`.
+6. Wired real dynamic progress bar and timers (`currentTime` / `duration` formatted `m:ss`) in `MusicCard.tsx` for YouTube (polling `getCurrentTime()` / `getDuration()`) and Spotify (`playback_update` event payload position/duration). Completely removed static `"0:01"` / `"LIVE"` placeholders.
+7. Updated caption copy in `PlayerScene.tsx`: Main line: `"woh gaane jo signal jaane ke baad bhi yaad rehte the."`, Sub line: `"बस चलती रहे, गाने बजते रहें。"`.
+Decisions made: Used Pusher Channels presence for real live visitor counts; unified player control into bottom MusicCard while keeping hero scene visually clean.
+Blocked on / open questions: None.
+Files touched: `app/api/pusher/auth/route.ts`, `lib/pusher-client.ts`, `lib/hooks/usePresenceCount.ts`, `components/LiveListenersBadge.tsx`, `components/MusicCard.tsx`, `components/PlayerScene.tsx`, `components/SpotifyEmbed.tsx`, `components/YouTubePlayer.tsx`, `lib/hooks/usePlayerState.ts`, `app/page.tsx`, `PROGRESS.md`

@@ -10,6 +10,8 @@ export interface YTPlayerInstance {
   previousVideo: () => void;
   destroy: () => void;
   getVideoData: () => { title?: string; author?: string };
+  getCurrentTime?: () => number;
+  getDuration?: () => number;
 }
 
 export interface YTPlayerEvent {

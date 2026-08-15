@@ -16,29 +16,37 @@ body {
   color: var(--color-pahadi-white);
 }
 
+.text-signboard-shadow {
+  text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.7), 0 0 12px rgba(217, 123, 76, 0.3);
+}
+
+.text-caption-shadow {
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+}
+
 @keyframes slow-drift {
   0% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.05) translate(-1%, -1%); }
+  50% { transform: scale(1.04) translate(-0.8%, -0.8%); }
   100% { transform: scale(1) translate(0, 0); }
 }
 
 @keyframes soft-pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(232, 163, 61, 0.4);
+    box-shadow: 0 0 0 0 rgba(232, 163, 61, 0.35);
   }
   50% {
     transform: scale(1.04);
-    box-shadow: 0 0 25px 8px rgba(232, 163, 61, 0.6);
+    box-shadow: 0 0 20px 6px rgba(232, 163, 61, 0.5);
   }
 }
 
 .animate-slow-drift {
-  animation: slow-drift 30s ease-in-out infinite alternate;
+  animation: slow-drift 35s ease-in-out infinite alternate;
 }
 
 .animate-soft-pulse {
-  animation: soft-pulse 2.5s ease-in-out infinite;
+  animation: soft-pulse 3s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

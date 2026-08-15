@@ -1,52 +1,116 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { PLAYLIST_CONFIG } from "@/lib/playlist";
+
+export interface SpotifyControllerInstance {
+  play: () => void;
+  pause: () => void;
+  togglePlay: () => void;
+  resume: () => void;
+  addListener: (
+    event: string,
+    callback: (e: { data: { isPaused: boolean; isBuffering: boolean; position: number; duration: number } }) => void
+  ) => void;
+  destroy: () => void;
+}
+
+export interface SpotifyIFrameAPI {
+  createController: (
+    element: HTMLElement | null,
+    options: { uri?: string; width?: string | number; height?: string | number },
+    callback: (embedController: SpotifyControllerInstance) => void
+  ) => void;
+}
+
+declare global {
+  interface Window {
+    onSpotifyIframeApiReady?: (IFrameAPI: SpotifyIFrameAPI) => void;
+  }
+}
 
 interface SpotifyEmbedProps {
   isVisible: boolean;
   onClose?: () => void;
+  onControllerReady?: (controller: SpotifyControllerInstance) => void;
+  onStateChange?: (isPlaying: boolean, positionSec?: number, durationSec?: number) => void;
 }
 
-export function SpotifyEmbed({ isVisible, onClose }: SpotifyEmbedProps) {
-  if (!isVisible) return null;
+export function SpotifyEmbed({
+  onControllerReady,
+  onStateChange,
+}: SpotifyEmbedProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const controllerRef = useRef<SpotifyControllerInstance | null>(null);
+  const onControllerReadyRef = useRef(onControllerReady);
+  const onStateChangeRef = useRef(onStateChange);
+
+  useEffect(() => {
+    onControllerReadyRef.current = onControllerReady;
+    onStateChangeRef.current = onStateChange;
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const initSpotifyController = (IFrameAPI: SpotifyIFrameAPI) => {
+      if (!containerRef.current || !isMounted) return;
+
+      IFrameAPI.createController(
+        containerRef.current,
+        {
+          uri: `spotify:playlist:${PLAYLIST_CONFIG.spotifyPlaylistId}`,
+          width: "100%",
+          height: "152",
+        },
+        (controller: SpotifyControllerInstance) => {
+          if (!isMounted) return;
+          controllerRef.current = controller;
+          onControllerReadyRef.current?.(controller);
+
+          controller.addListener("playback_update", (e) => {
+            if (!isMounted) return;
+            const isPlaying = !e.data.isPaused;
+            const positionSec = Math.floor((e.data.position || 0) / 1000);
+            const durationSec = Math.floor((e.data.duration || 0) / 1000);
+            onStateChangeRef.current?.(isPlaying, positionSec, durationSec);
+          });
+        }
+      );
+    };
+
+    if (typeof window !== "undefined") {
+      const existingScript = document.getElementById("spotify-iframe-api");
+      if (!existingScript) {
+        const tag = document.createElement("script");
+        tag.id = "spotify-iframe-api";
+        tag.src = "https://open.spotify.com/embed/iframe-api/v1";
+        tag.async = true;
+        document.body.appendChild(tag);
+      }
+
+      const prevCallback = window.onSpotifyIframeApiReady;
+      window.onSpotifyIframeApiReady = (IFrameAPI) => {
+        if (prevCallback) prevCallback(IFrameAPI);
+        initSpotifyController(IFrameAPI);
+      };
+    }
+
+    return () => {
+      isMounted = false;
+      if (controllerRef.current && typeof controllerRef.current.destroy === "function") {
+        controllerRef.current.destroy();
+      }
+    };
+  }, []);
 
   return (
-    <div className="fixed inset-x-4 bottom-20 md:bottom-24 md:right-8 md:left-auto md:w-[400px] z-30 bg-[#2F4538] border-2 border-[#E8A33D]/40 rounded-2xl p-4 shadow-2xl backdrop-blur-lg animate-in fade-in slide-in-from-bottom-4 duration-300">
-      <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#F7EFE2]/15">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#1DB954]" aria-hidden="true" />
-          <h3 className="font-serif text-sm md:text-base font-semibold text-[#F7EFE2]">
-            Spotify Playlist
-          </h3>
-        </div>
-        {onClose && (
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label="Close Spotify embed view"
-            className="text-[#F7EFE2]/70 hover:text-[#F7EFE2] text-xs px-2 py-1 rounded bg-[#F7EFE2]/10 hover:bg-[#F7EFE2]/20 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E8A33D]"
-          >
-            ✕ Hide
-          </button>
-        )}
-      </div>
-
-      <div className="w-full rounded-xl overflow-hidden bg-black/30">
-        <iframe
-          src={`https://open.spotify.com/embed/playlist/${PLAYLIST_CONFIG.spotifyPlaylistId}?utm_source=generator&theme=0`}
-          width="100%"
-          height="152"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-          title="Spotify Pahadi Songs Playlist Embed"
-          className="border-0 rounded-xl"
-        />
-      </div>
-
-      <p className="mt-2 text-[11px] text-[#F7EFE2]/70 text-center leading-tight">
-        Note: Spotify logged-in users get full playback; logged-out visitors hear 30s previews.
-      </p>
+    /* Off-screen hidden mount container for Spotify Controller API so widget never interferes visually */
+    <div
+      aria-hidden="true"
+      className="absolute -left-[9999px] top-0 w-1 h-1 opacity-0 pointer-events-none overflow-hidden"
+    >
+      <div ref={containerRef} id="spotify-embed-container" className="w-1 h-1" />
     </div>
   );
 }

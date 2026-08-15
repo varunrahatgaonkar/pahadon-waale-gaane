@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 
 interface PlayButtonProps {
   isPlaying?: boolean;
@@ -20,12 +20,16 @@ export function PlayButton({
         !isPlaying ? "animate-soft-pulse" : ""
       } ${className}`}
     >
-      <div className="relative flex items-center justify-center w-28 h-28 md:w-36 md:h-36 rounded-full bg-[#E8A33D] border-4 border-[#2F4538] shadow-2xl transition-all duration-300 group-hover:bg-[#d49232] group-hover:scale-105">
-        <div className="absolute inset-2 rounded-full border-2 border-dashed border-[#2F4538]/30 pointer-events-none" />
+      {/* Outer Dial Knob Chassis - Compact & Perfectly Proportioned */}
+      <div className="relative flex items-center justify-center w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-b from-[#E8A33D] via-[#d49232] to-[#b37720] border-4 border-[#2F4538] shadow-[0_8px_30px_rgba(0,0,0,0.65)] transition-all duration-300 group-hover:scale-105">
+        {/* Tactile Inner Dial Ring */}
+        <div className="absolute inset-2 rounded-full border-2 border-dashed border-[#2F4538]/40 pointer-events-none" />
+        <div className="absolute inset-3.5 rounded-full border border-[#F7EFE2]/25 pointer-events-none" />
 
+        {/* Center Play / Pause Icon */}
         {isPlaying ? (
           <svg
-            className="w-10 h-10 md:w-14 md:h-14 text-[#2F4538] transition-transform duration-200 group-hover:scale-110"
+            className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-[#2F4538] drop-shadow-sm transition-transform duration-200 group-hover:scale-110"
             fill="currentColor"
             viewBox="0 0 24 24"
             aria-hidden="true"
@@ -34,7 +38,7 @@ export function PlayButton({
           </svg>
         ) : (
           <svg
-            className="w-10 h-10 md:w-14 md:h-14 text-[#2F4538] ml-1 transition-transform duration-200 group-hover:scale-110"
+            className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-[#2F4538] ml-1 drop-shadow-sm transition-transform duration-200 group-hover:scale-110"
             fill="currentColor"
             viewBox="0 0 24 24"
             aria-hidden="true"
@@ -44,7 +48,8 @@ export function PlayButton({
         )}
       </div>
 
-      <span className="mt-3 font-serif text-lg md:text-xl text-[#F7EFE2] drop-shadow-md tracking-wider font-medium group-hover:text-[#E8A33D] transition-colors">
+      {/* Button Text Label in Devanagari */}
+      <span className="mt-2.5 font-serif text-base sm:text-lg md:text-xl text-[#F7EFE2] text-caption-shadow tracking-wider font-semibold group-hover:text-[#E8A33D] transition-colors">
         {isPlaying ? "रुकिए" : "🎵 बजाओ"}
       </span>
     </button>
