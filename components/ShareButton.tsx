@@ -11,7 +11,7 @@ export interface ShareButtonProps {
 
 export function ShareButton({
   title = "पहाड़ों वाले गाने | Pahado Wale Gaane",
-  text = "gaane jo pahadiyon mein hi sahi lagte the. before Wi-Fi, before Google Maps ki 'no signal'",
+  text = "before Instagram reels of hill stations, there was just a bus, a dhaba, and one speaker playing the same songs on loop. made a website for that feeling. 'sound on 🔊'",
   url,
   className = "",
 }: ShareButtonProps) {

@@ -29,10 +29,10 @@ export function PlayerScene({ children }: PlayerSceneProps) {
         {/* Nostalgic Memory Caption */}
         <div className="pt-1 flex flex-col space-y-0.5 sm:space-y-1 text-caption-shadow mb-4">
           <p className="font-sans text-xs sm:text-base text-[#e2e2e5] font-medium tracking-wide italic opacity-90 leading-snug">
-            &ldquo;woh gaane jo signal jaane ke baad bhi yaad rehte the.&rdquo;
+            &ldquo;before Instagram reels of hill stations, there was just a bus, a dhaba, and one speaker playing the same songs on loop.&rdquo;
           </p>
           <p className="font-sans text-[11px] sm:text-sm text-[#e2e2e5]/75 font-normal tracking-wide">
-            बस चलती रहे, गाने बजते रहें।
+            धुंध में डूबी सड़कें, चाय की भाप, और वही पुराना गाना जो हर मोड़ पर साथ चलता था। पहाड़ों वाले गाने⛰️
           </p>
         </div>
       </header>

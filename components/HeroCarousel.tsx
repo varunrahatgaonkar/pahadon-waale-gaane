@@ -54,7 +54,6 @@ export function HeroCarousel() {
               alt="Pahado Wale Gaane - Mountain Scene"
               fill
               priority={idx === 0}
-              quality={80}
               sizes="100vw"
               className="object-cover object-center filter brightness-[0.92] contrast-[1.05]"
             />
