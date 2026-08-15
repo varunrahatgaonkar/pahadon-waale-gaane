@@ -108,8 +108,6 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
       console.log("[Pahado Player] Init playlist embed, origin:", origin);
 
       playerRef.current = new window.YT.Player(containerRef.current, {
-        // Start from Ilahi — loads that video first, then continues through the playlist
-        videoId: PLAYLIST_CONFIG.startVideoId,
         playerVars: {
           list: PLAYLIST_CONFIG.youtubePlaylistId,
           listType: "playlist",

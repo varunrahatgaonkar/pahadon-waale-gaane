@@ -67,8 +67,16 @@ export function usePlayerState() {
     try { ytPlayerRef.current?.setShuffle?.(next); } catch { /* ignore */ }
   }, [isShuffle]);
 
-  const handleSelectTrackIndex = useCallback((index: number) => {
-    try { ytPlayerRef.current?.playVideoAt?.(index); } catch { /* ignore */ }
+  const handleSelectTrackIndex = useCallback((index: number, videoId?: string) => {
+    try {
+      if (videoId && typeof ytPlayerRef.current?.loadVideoById === "function") {
+        // Load exact video by ID — most reliable way to play the right song
+        ytPlayerRef.current.loadVideoById(videoId);
+      } else {
+        // Fallback: play by playlist index
+        ytPlayerRef.current?.playVideoAt?.(index);
+      }
+    } catch { /* ignore */ }
   }, []);
 
   return {
