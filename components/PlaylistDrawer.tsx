@@ -162,43 +162,17 @@ export function PlaylistDrawer({
           )}
         </div>
 
-        {/* Footer: Add Songs & External Link */}
-        <div className="border-t border-white/10 bg-[#121416] shrink-0 flex flex-col">
-          {/* Collaborate Button */}
+        {/* External YouTube Playlist Link */}
+        <div className="p-3 border-t border-white/10 bg-[#121416] flex items-center justify-between text-xs shrink-0">
           <a
-            href="https://www.youtube.com/playlist?list=PLcwotpnLerAU&jct=f9j1lugp2n2y24wQ7hj_qg"
+            href={`https://youtube.com/playlist?list=${PLAYLIST_CONFIG.youtubePlaylistId}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-3 border-b border-white/5 hover:bg-white/5 transition-colors flex items-center justify-between group"
+            className="text-[#ffb347] hover:underline flex items-center gap-1 font-mono text-[10px] sm:text-[11px]"
           >
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-[#ffb347]/20 text-[#ffb347] flex items-center justify-center text-xs">
-                +
-              </span>
-              <div>
-                <p className="text-[11px] sm:text-xs font-bold text-[#ffd7a9] group-hover:text-white transition-colors">
-                  Add your pahadon waale gaane!
-                </p>
-                <p className="text-[9px] sm:text-[10px] text-[#d6c3b0]/60">
-                  Join the collaborative playlist
-                </p>
-              </div>
-            </div>
-            <span className="text-[#ffb347] group-hover:translate-x-1 transition-transform">→</span>
+            <span>▶</span> Open Full Playlist on YouTube
           </a>
-
-          {/* Original View Playlist Link */}
-          <div className="p-3 flex items-center justify-between text-xs">
-            <a
-              href={`https://youtube.com/playlist?list=${PLAYLIST_CONFIG.youtubePlaylistId}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-[#ffb347] hover:underline flex items-center gap-1 font-mono text-[10px] sm:text-[11px]"
-            >
-              <span>▶</span> Open Full Playlist on YouTube
-            </a>
-            <span className="font-mono text-[10px] text-[#d6c3b0]/50">FM 92.7</span>
-          </div>
+          <span className="font-mono text-[10px] text-[#d6c3b0]/50">FM 92.7</span>
         </div>
       </div>
     </div>

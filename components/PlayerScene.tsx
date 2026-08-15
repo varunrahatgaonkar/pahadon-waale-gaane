@@ -1,5 +1,6 @@
 import React from "react";
 import { HeroCarousel } from "./HeroCarousel";
+import { CollaborateButton } from "./CollaborateButton";
 
 interface PlayerSceneProps {
   children?: React.ReactNode;
@@ -27,13 +28,18 @@ export function PlayerScene({ children }: PlayerSceneProps) {
         </p>
 
         {/* Nostalgic Memory Caption */}
-        <div className="pt-1 flex flex-col space-y-0.5 sm:space-y-1 text-caption-shadow">
+        <div className="pt-1 flex flex-col space-y-0.5 sm:space-y-1 text-caption-shadow mb-4">
           <p className="font-sans text-xs sm:text-base text-[#e2e2e5] font-medium tracking-wide italic opacity-90 leading-snug">
             &ldquo;woh gaane jo signal jaane ke baad bhi yaad rehte the.&rdquo;
           </p>
           <p className="font-sans text-[11px] sm:text-sm text-[#e2e2e5]/75 font-normal tracking-wide">
             बस चलती रहे, गाने बजते रहें।
           </p>
+        </div>
+
+        {/* Floating Collaborate Button under title */}
+        <div className="pt-2">
+          <CollaborateButton />
         </div>
       </header>
 

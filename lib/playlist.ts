@@ -23,7 +23,7 @@ export const PLAYLIST_CONFIG = {
   tracks: [
     { id: "Z_-lSJg52NU", title: "Namo Namo", artist: "Kedarnath • Amit Trivedi", duration: "5:22" },
     { id: "fdubeMFwuGs", title: "Ilahi", artist: "Yeh Jawaani Hai Deewani • Arijit Singh", duration: "3:48" },
-    { id: "https://youtu.be/?si=gHNIMihIQhq6i9e1", title: "Kabira (Encore)", artist: "Yeh Jawaani Hai Deewani • Arijit Singh", duration: "4:29" },
+    { id: "jHNNMj5bNQw", title: "Kabira (Encore)", artist: "Yeh Jawaani Hai Deewani • Arijit Singh", duration: "4:29" },
     { id: "FqS_N9j4F3w", title: "Subhanallah", artist: "Yeh Jawaani Hai Deewani • Sreerama Chandra", duration: "4:09" },
     { id: "cYPhd24b6_o", title: "Hawaayein", artist: "Jab Harry Met Sejal • Arijit Singh", duration: "4:50" },
     { id: "284Ov7ysmfA", title: "Channa Mereya", artist: "Ae Dil Hai Mushkil • Arijit Singh", duration: "4:49" },
