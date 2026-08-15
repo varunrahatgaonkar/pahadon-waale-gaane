@@ -34,3 +34,10 @@ Did: Built reusable `components/PlayButton.tsx` styled like a vintage radio dial
 Decisions made: Added `soft-pulse` animation keyframes in `app/globals.css` with `@media (prefers-reduced-motion: reduce)` support.
 Blocked on / open questions: None for PlayButton.
 Files touched: `components/PlayButton.tsx`, `app/globals.css`, `PROGRESS.md`
+
+## [2026-08-15 13:25] — Antigravity
+Task(s) worked: [2. Design → code - NowPlayingBar](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/TASKS.md#2-design--code-via-stitch--antigravity)
+Did: Built reusable `components/NowPlayingBar.tsx` bottom translucent strip (`backdrop-blur-md`, `#2F4538`/90 theme color) featuring track title & artist metadata display, previous/next/play controls, and the YouTube/Spotify provider toggle switch.
+Decisions made: Component is fully UI-controlled via clean props/callbacks, ready to connect to player state.
+Blocked on / open questions: None for NowPlayingBar.
+Files touched: `components/NowPlayingBar.tsx`, `PROGRESS.md`
