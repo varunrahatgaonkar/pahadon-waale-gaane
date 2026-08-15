@@ -20,12 +20,9 @@ export function CollaborateButton() {
       </span>
       
       {/* Text */}
-      <div className="relative z-10 flex flex-col items-start leading-none">
-        <span className="font-sans text-[10px] sm:text-[11px] font-medium text-[#d6c3b0]/80 tracking-wider uppercase mb-0.5">
-          Collaborate
-        </span>
+      <div className="relative z-10 flex items-center leading-none">
         <span className="font-sans text-xs sm:text-sm font-bold text-[#ffd7a9] tracking-wide drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-          Add your gaane!
+          Add your Pahado Waale Gaane!!
         </span>
       </div>
       

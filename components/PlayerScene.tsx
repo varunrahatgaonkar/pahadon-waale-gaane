@@ -1,6 +1,5 @@
 import React from "react";
 import { HeroCarousel } from "./HeroCarousel";
-import { CollaborateButton } from "./CollaborateButton";
 
 interface PlayerSceneProps {
   children?: React.ReactNode;
@@ -35,11 +34,6 @@ export function PlayerScene({ children }: PlayerSceneProps) {
           <p className="font-sans text-[11px] sm:text-sm text-[#e2e2e5]/75 font-normal tracking-wide">
             बस चलती रहे, गाने बजते रहें।
           </p>
-        </div>
-
-        {/* Floating Collaborate Button under title */}
-        <div className="pt-2">
-          <CollaborateButton />
         </div>
       </header>
 

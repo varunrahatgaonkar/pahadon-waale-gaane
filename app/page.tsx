@@ -8,6 +8,7 @@ import { LiveListenersBadge } from "@/components/LiveListenersBadge";
 import { YouTubePlayer } from "@/components/YouTubePlayer";
 import { PlaylistDrawer } from "@/components/PlaylistDrawer";
 import { FirstTimeBanner } from "@/components/FirstTimeBanner";
+import { CollaborateButton } from "@/components/CollaborateButton";
 import { usePlayerState } from "@/lib/hooks/usePlayerState";
 
 export default function Home() {
@@ -43,6 +44,11 @@ export default function Home() {
       <div className="fixed top-3 right-3 sm:top-6 sm:right-8 z-40 flex items-center gap-2 sm:gap-3 pointer-events-auto">
         <LiveListenersBadge />
         <ShareButton />
+      </div>
+
+      {/* Top Center Collaborative Button */}
+      <div className="fixed top-3 left-1/2 -translate-x-1/2 z-40 pointer-events-auto">
+        <CollaborateButton />
       </div>
 
       {/* Hero Center - Clean Unobscured Scene View */}
