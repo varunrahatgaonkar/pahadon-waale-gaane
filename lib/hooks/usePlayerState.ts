@@ -11,6 +11,7 @@ export interface TrackInfo {
 
 export function usePlayerState() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isShuffle, setIsShuffle] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [currentTrack, setCurrentTrack] = useState<TrackInfo>(PLAYLIST_CONFIG.fallbackTrack);
@@ -102,8 +103,37 @@ export function usePlayerState() {
     }
   }, []);
 
+  const handleToggleShuffle = useCallback(() => {
+    const nextShuffle = !isShuffle;
+    console.log(`[Pahado Player Hook] Toggling shuffle: ${nextShuffle}`);
+    setIsShuffle(nextShuffle);
+    if (ytPlayerRef.current && typeof ytPlayerRef.current.setShuffle === "function") {
+      try {
+        ytPlayerRef.current.setShuffle(nextShuffle);
+      } catch (err) {
+        console.error("[Pahado Player Hook] Error toggling shuffle:", err);
+      }
+    }
+  }, [isShuffle]);
+
+  const handleSelectTrackIndex = useCallback((index: number) => {
+    console.log(`[Pahado Player Hook] Selecting track index: ${index}`);
+    if (ytPlayerRef.current) {
+      try {
+        if (typeof ytPlayerRef.current.playVideoAt === "function") {
+          ytPlayerRef.current.playVideoAt(index);
+        } else {
+          ytPlayerRef.current.playVideo();
+        }
+      } catch (err) {
+        console.error("[Pahado Player Hook] Error playing video at index:", err);
+      }
+    }
+  }, []);
+
   return {
     isPlaying,
+    isShuffle,
     currentTime,
     duration,
     currentTrack,
@@ -112,5 +142,7 @@ export function usePlayerState() {
     handlePlayPause,
     handleNext,
     handlePrevious,
+    handleToggleShuffle,
+    handleSelectTrackIndex,
   };
 }

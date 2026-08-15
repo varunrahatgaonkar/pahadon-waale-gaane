@@ -13,6 +13,9 @@ export interface YTPlayerInstance {
   getCurrentTime?: () => number;
   getDuration?: () => number;
   getPlayerState?: () => number;
+  setShuffle?: (shuffle: boolean) => void;
+  playVideoAt?: (index: number) => void;
+  setLoop?: (loopPlaylists: boolean) => void;
 }
 
 export interface YTPlayerEvent {
