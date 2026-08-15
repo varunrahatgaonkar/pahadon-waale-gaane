@@ -16,7 +16,14 @@ Files touched: <list>
 
 ## [2026-08-15 13:10] — Antigravity
 Task(s) worked: [1. Scaffold](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/TASKS.md#1-scaffold)
-Did: Verified Next.js 15+ App Router, TypeScript, and Tailwind setup; configured Google Fonts (`Rozha One` and `Hind`) and site metadata in `app/layout.tsx`; updated `app/globals.css` with theme tokens and animations; configured `remotePatterns` in `next.config.ts`; created `components/` and `lib/` directory markers.
+Did: Verified Next.js 15+ App Router, TypeScript, and Tailwind setup; configured Google Fonts (`Rozha One` and `Hind`) and site metadata in `app/layout.tsx`; updated `app/globals.css` with theme tokens weekend animations; configured `remotePatterns` in `next.config.ts`; created `components/` and `lib/` directory markers.
 Decisions made: Mapped Tailwind v4 theme variables to palette & font tokens defined in DESIGN.md.
 Blocked on / open questions: None for Phase 1.
 Files touched: `app/layout.tsx`, `app/globals.css`, `next.config.ts`, `components/.gitkeep`, `lib/.gitkeep`, `PROGRESS.md`
+
+## [2026-08-15 13:14] — Antigravity
+Task(s) worked: [2. Design → code - PlayerScene](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/TASKS.md#2-design--code-via-stitch--antigravity)
+Did: Built full-bleed `components/PlayerScene.tsx` with Devanagari/Latin wordmark header, golden-hour gradient scene art fallback, subtle CSS drift animation (`animate-slow-drift`), vignette overlay, and a children container slot. Updated `app/page.tsx` to render `PlayerScene`.
+Decisions made: Implemented a temporary gradient treatment matching palette tokens until background image is connected.
+Blocked on / open questions: None for PlayerScene.
+Files touched: `components/PlayerScene.tsx`, `app/page.tsx`, `PROGRESS.md`
