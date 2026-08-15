@@ -70,6 +70,7 @@ export default function Home() {
         isOpen={isPlaylistOpen}
         onClose={() => setIsPlaylistOpen(false)}
         currentTrackTitle={currentTrack.title}
+        currentArtistName={currentTrack.artist}
         isPlaying={isPlaying}
         isShuffle={isShuffle}
         onToggleShuffle={handleToggleShuffle}

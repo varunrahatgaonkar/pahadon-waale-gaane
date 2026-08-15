@@ -7,6 +7,7 @@ interface PlaylistDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   currentTrackTitle?: string;
+  currentArtistName?: string;
   isPlaying?: boolean;
   isShuffle?: boolean;
   onToggleShuffle?: () => void;
@@ -17,6 +18,7 @@ export function PlaylistDrawer({
   isOpen,
   onClose,
   currentTrackTitle = "",
+  currentArtistName = "",
   isPlaying = false,
   isShuffle = false,
   onToggleShuffle,
@@ -46,7 +48,7 @@ export function PlaylistDrawer({
               <span>📻</span> पहाड़ों की प्लेलिस्ट
             </h2>
             <p className="font-sans text-xs text-[#d6c3b0]/70 mt-0.5">
-              Radio Pahad • {PLAYLIST_CONFIG.tracks.length} Songs Playlist
+              Radio Pahad • 300+ Tracks Playlist
             </p>
           </div>
 
@@ -57,18 +59,11 @@ export function PlaylistDrawer({
               onClick={onToggleShuffle}
               className={`px-3 py-1.5 rounded-full border text-xs font-medium flex items-center gap-1.5 transition-all ${
                 isShuffle
-                  ? "bg-[#ffb347] text-[#462a00] border-[#ffb347] shadow-[0_0_12px_rgba(255,179,71,0.5)] font-bold"
+                  ? "bg-[#ffb347] text-[#462a00] border-[#ffb347] font-bold shadow-[0_0_12px_rgba(255,179,71,0.5)]"
                   : "bg-white/5 border-white/15 text-[#d6c3b0] hover:text-[#ffd7a9] hover:bg-white/10"
               }`}
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 4h3l3.5 5 2.5-3.5H20M4 20h3l10-14h3M15 20h5v-5M15 4h5v5"
-                />
-              </svg>
+              <span>🔀</span>
               {isShuffle ? "Shuffle ON" : "Shuffle"}
             </button>
 
@@ -81,6 +76,24 @@ export function PlaylistDrawer({
             >
               ✕
             </button>
+          </div>
+        </div>
+
+        {/* Currently Playing Highlight Card */}
+        <div className="p-3.5 mx-3.5 mt-3.5 bg-[#ffb347]/10 border border-[#ffb347]/30 rounded-2xl flex items-center gap-3">
+          <div className="w-9 h-9 rounded-full bg-[#ffb347] text-[#462a00] font-bold flex items-center justify-center text-sm shrink-0">
+            {isPlaying ? "▶" : "⏸"}
+          </div>
+          <div className="min-w-0 flex-1">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#ffb347]">
+              Now Playing on Radio
+            </span>
+            <p className="text-xs font-bold text-[#ffd7a9] truncate">
+              {currentTrackTitle || "पहाड़ों वाले गाने"}
+            </p>
+            <p className="text-[11px] text-[#d6c3b0]/70 truncate">
+              {currentArtistName || "Radio Pahad"}
+            </p>
           </div>
         </div>
 
@@ -149,9 +162,17 @@ export function PlaylistDrawer({
           )}
         </div>
 
-        {/* Footer info */}
-        <div className="p-3 border-t border-white/10 bg-[#121416] text-center font-mono text-[10px] text-[#d6c3b0]/50">
-          Click any song to jump & play • Radio Pahad 92.7 FM
+        {/* External YouTube Playlist Link */}
+        <div className="p-3 border-t border-white/10 bg-[#121416] flex items-center justify-between text-xs">
+          <a
+            href={`https://youtube.com/playlist?list=${PLAYLIST_CONFIG.youtubePlaylistId}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[#ffb347] hover:underline flex items-center gap-1 font-mono text-[11px]"
+          >
+            <span>▶</span> Open Full 300+ Playlist on YouTube
+          </a>
+          <span className="font-mono text-[10px] text-[#d6c3b0]/50">FM 92.7</span>
         </div>
       </div>
     </div>

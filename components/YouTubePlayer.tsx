@@ -51,6 +51,28 @@ interface YouTubePlayerProps {
   onStateChange?: (isPlaying: boolean, trackData?: { title: string; artist: string }) => void;
 }
 
+function parseYouTubeTrack(rawTitle?: string, author?: string): { title: string; artist: string } {
+  if (!rawTitle) return PLAYLIST_CONFIG.fallbackTrack;
+
+  // Clean common YouTube noise
+  const cleaned = rawTitle
+    .replace(/[\(\[\{](official|lyric|video|hd|4k|audio|full song|visualizer|remastered|music video).*?[\)\]\}]/gi, "")
+    .trim();
+
+  const parts = cleaned.split(/\s+[-|:]\s+/);
+  if (parts.length >= 2) {
+    return {
+      artist: parts[0].trim(),
+      title: parts[1].trim(),
+    };
+  }
+
+  return {
+    title: cleaned,
+    artist: author || "Radio Pahad • Pahadi Classics",
+  };
+}
+
 export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerProps) {
   const playerRef = useRef<YTPlayerInstance | null>(null);
   const iframeRef = useRef<HTMLIFrameElement | null>(null);
@@ -87,18 +109,7 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
               if (event.target && typeof event.target.getVideoData === "function") {
                 const videoData = event.target.getVideoData();
                 if (videoData && videoData.title) {
-                  const parts = videoData.title.split("-");
-                  if (parts.length > 1) {
-                    trackInfo = {
-                      title: parts[1].trim(),
-                      artist: parts[0].trim(),
-                    };
-                  } else {
-                    trackInfo = {
-                      title: videoData.title,
-                      artist: videoData.author || "Pahadi Classics",
-                    };
-                  }
+                  trackInfo = parseYouTubeTrack(videoData.title, videoData.author);
                 }
               }
 
