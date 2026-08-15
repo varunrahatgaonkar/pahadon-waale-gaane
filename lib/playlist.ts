@@ -4,7 +4,7 @@ export interface TrackMetadata {
 }
 
 export const PLAYLIST_CONFIG = {
-  youtubePlaylistId: "PLecZCLJr4GNE",
+  youtubePlaylistId: "PLQdfb6nEJz_X-0Tkwec2N2Sj83d_DM36d",
   fallbackTrack: {
     title: "पहाड़ों वाले गाने",
     artist: "Radio Pahad • FM 92.7",
