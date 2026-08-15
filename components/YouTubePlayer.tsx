@@ -67,8 +67,8 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
       if (!window.YT || !window.YT.Player) return;
 
       playerRef.current = new window.YT.Player("youtube-hidden-player", {
-        height: "0",
-        width: "0",
+        height: "1",
+        width: "1",
         playerVars: {
           listType: "playlist",
           list: PLAYLIST_CONFIG.youtubePlaylistId,
@@ -144,5 +144,11 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
     };
   }, []);
 
-  return <div id="youtube-hidden-player" className="hidden pointer-events-none" aria-hidden="true" />;
+  return (
+    <div
+      id="youtube-hidden-player"
+      className="absolute top-0 left-0 w-px h-px opacity-0 pointer-events-none -z-50 overflow-hidden"
+      aria-hidden="true"
+    />
+  );
 }

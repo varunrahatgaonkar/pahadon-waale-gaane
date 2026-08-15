@@ -4,10 +4,10 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 export function HeroCarousel() {
-  const [images, setImages] = useState<string[]>(["/scene.png"]);
+  const [images, setImages] = useState<string[]>(["/hero/hero-1.jpg"]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Fetch all images present in public/ and public/hero/
+  // Fetch all images present in public/hero/
   useEffect(() => {
     fetch("/api/hero-images")
       .then((res) => res.json())
@@ -17,7 +17,7 @@ export function HeroCarousel() {
         }
       })
       .catch(() => {
-        // Fallback to scene.png
+        // Fallback
       });
   }, []);
 
