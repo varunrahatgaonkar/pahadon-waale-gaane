@@ -98,7 +98,10 @@ export function MusicCard({
           <div className="flex items-center gap-2.5 sm:gap-3">
             <button
               type="button"
-              onClick={onPrevious}
+              onClick={() => {
+                console.log("[MusicCard] Previous button clicked!");
+                onPrevious?.();
+              }}
               aria-label="Previous track"
               className="p-1 rounded-full text-[#e2e2e5]/70 hover:text-[#ffd7a9] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#ffb347]"
             >
@@ -110,7 +113,10 @@ export function MusicCard({
             {/* Play/Pause Knob */}
             <button
               type="button"
-              onClick={onPlayPause}
+              onClick={() => {
+                console.log("[MusicCard] Play/Pause button clicked!");
+                onPlayPause?.();
+              }}
               aria-label={isPlaying ? "Pause track" : "Play track"}
               className="w-9 h-9 rounded-full bg-gradient-to-b from-[#ffb347] to-[#845400] border-2 border-[#1e2022] shadow-[0_0_15px_rgba(255,179,71,0.4)] flex items-center justify-center text-[#462a00] hover:scale-105 active:scale-95 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd7a9]"
             >
@@ -127,7 +133,10 @@ export function MusicCard({
 
             <button
               type="button"
-              onClick={onNext}
+              onClick={() => {
+                console.log("[MusicCard] Next button clicked!");
+                onNext?.();
+              }}
               aria-label="Next track"
               className="p-1 rounded-full text-[#e2e2e5]/70 hover:text-[#ffd7a9] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#ffb347]"
             >

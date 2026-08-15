@@ -17,10 +17,12 @@ export function usePlayerState() {
   const ytPlayerRef = useRef<YTPlayerInstance | null>(null);
 
   const handleYTReady = useCallback((playerInstance: YTPlayerInstance) => {
+    console.log("[Pahado Player Hook] handleYTReady called with playerInstance:", playerInstance);
     ytPlayerRef.current = playerInstance;
   }, []);
 
   const handleYTStateChange = useCallback((playing: boolean, trackData?: TrackInfo) => {
+    console.log(`[Pahado Player Hook] handleYTStateChange -> playing: ${playing}`, trackData);
     setIsPlaying(playing);
     if (trackData) {
       setCurrentTrack(trackData);
@@ -52,38 +54,50 @@ export function usePlayerState() {
   }, [isPlaying]);
 
   const handlePlayPause = useCallback(() => {
-    if (!ytPlayerRef.current) return;
+    console.log("[Pahado Player Hook] handlePlayPause clicked! Current isPlaying state:", isPlaying);
+    console.log("[Pahado Player Hook] ytPlayerRef.current status:", ytPlayerRef.current);
+
+    if (!ytPlayerRef.current) {
+      console.warn("[Pahado Player Hook] YouTube player reference is not ready yet!");
+      return;
+    }
+
     try {
       if (isPlaying) {
+        console.log("[Pahado Player Hook] Sending pause command to YouTube player...");
         ytPlayerRef.current.pauseVideo();
       } else {
+        console.log("[Pahado Player Hook] Sending play command to YouTube player...");
         ytPlayerRef.current.playVideo();
       }
-    } catch {
+    } catch (err) {
+      console.error("[Pahado Player Hook] Error toggling play/pause:", err);
       setIsPlaying(!isPlaying);
     }
   }, [isPlaying]);
 
   const handleNext = useCallback(() => {
+    console.log("[Pahado Player Hook] handleNext clicked!");
     if (ytPlayerRef.current) {
       try {
         if (typeof ytPlayerRef.current.nextVideo === "function") {
           ytPlayerRef.current.nextVideo();
         }
-      } catch {
-        // ignore
+      } catch (err) {
+        console.error("[Pahado Player Hook] Error calling nextVideo:", err);
       }
     }
   }, []);
 
   const handlePrevious = useCallback(() => {
+    console.log("[Pahado Player Hook] handlePrevious clicked!");
     if (ytPlayerRef.current) {
       try {
         if (typeof ytPlayerRef.current.previousVideo === "function") {
           ytPlayerRef.current.previousVideo();
         }
-      } catch {
-        // ignore
+      } catch (err) {
+        console.error("[Pahado Player Hook] Error calling previousVideo:", err);
       }
     }
   }, []);

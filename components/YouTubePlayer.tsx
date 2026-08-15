@@ -65,11 +65,14 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
     const attachPlayer = () => {
       if (!window.YT || !window.YT.Player || !iframeRef.current) return;
 
+      console.log("[Pahado Player] Initializing YouTube IFrame API with playlist ID:", PLAYLIST_CONFIG.youtubePlaylistId);
+
       try {
         playerRef.current = new window.YT.Player(iframeRef.current, {
           events: {
             onReady: (event: YTPlayerEvent) => {
               if (isMounted) {
+                console.log("[Pahado Player] YouTube Player is READY! Playlist loaded successfully.");
                 onPlayerReadyRef.current?.(event.target);
               }
             },
@@ -96,9 +99,11 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
                 }
               }
 
+              console.log(`[Pahado Player] Playback state changed: ${isPlaying ? "PLAYING" : "PAUSED"}`, trackInfo);
               onStateChangeRef.current?.(isPlaying, trackInfo);
             },
-            onError: () => {
+            onError: (err: YTPlayerEvent) => {
+              console.error("[Pahado Player] YouTube Player error code:", err.data);
               if (isMounted) {
                 onStateChangeRef.current?.(false);
               }
@@ -106,7 +111,7 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
           },
         });
       } catch (err) {
-        console.error("YouTube Player init error:", err);
+        console.error("[Pahado Player] YouTube Player init exception:", err);
       }
     };
 
@@ -137,7 +142,7 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
     };
   }, []);
 
-  const embedUrl = `https://www.youtube-nocookie.com/embed/videoseries?list=${PLAYLIST_CONFIG.youtubePlaylistId}&enablejsapi=1&autoplay=0&controls=0&disablekb=1&fs=0&modestbranding=1&rel=0`;
+  const embedUrl = `https://www.youtube.com/embed/videoseries?list=${PLAYLIST_CONFIG.youtubePlaylistId}&enablejsapi=1&autoplay=0&controls=0&disablekb=1&fs=0&modestbranding=1&rel=0`;
 
   return (
     <iframe

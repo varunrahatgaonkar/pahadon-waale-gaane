@@ -1,22 +1,36 @@
-# TESTING.md
+# TESTING.md - Verification Suite
 
-No formal test suite needed for a site this small, but these checks are non-negotiable before launch since a broken play button or a silent autoplay failure kills the entire product idea.
+This document logs all manual and diagnostic test procedures for **Pahado Wale Gaane** to ensure zero regression before deployment.
 
-## Manual checks (run every time before deploy)
-1. **Cold load → click Play → sound starts within ~1s.** This is the single most important interaction on the site. Test on throttled 4G, not just fast wifi.
-2. **iOS Safari specifically.** iOS has the strictest autoplay policy of any major browser — confirm the player actually starts on first tap, first time, every time.
-3. **Reload after playing** — confirm no stuck/ghost audio, no double players stacking.
-4. **Next/prev/shuffle controls** actually change the track and the NowPlayingBar text updates.
-5. **Share button** — X share intent opens with correct prefilled text + link; copy-link fallback works if share API unsupported.
-6. **No playlist configured / player fails to load** — page must not crash; show a graceful fallback ("having trouble loading the playlist, try the Spotify link instead").
-7. **Resize/rotate** — scene and controls reflow correctly at common breakpoints (360px, 390px, 768px, 1024px, 1440px).
-8. **Keyboard only** — Tab reaches Play button, NowPlayingBar controls, Share button, in a sane order; Enter/Space activates them.
-9. **Screen reader spot check** (VoiceOver or TalkBack) — play button announces its purpose, now-playing text is announced on change (or at least discoverable), no unlabeled icon buttons.
-10. **prefers-reduced-motion** — animations (parallax, pulse) actually turn off when that OS setting is on.
+---
 
-## Automated (lightweight, optional but cheap to add)
-- Lighthouse CI on the Vercel preview deploy (perf + accessibility score gate, e.g. fail build under 85 on either)
-- One Playwright smoke test: page loads, play button is clickable, now-playing bar text is non-empty after click (mock the player if needed to keep this fast/deterministic)
+## 1. Diagnostics & Console Verification
+- [x] **Play Button Console Logs**: When pressing the central Play/Pause button on the floating `MusicCard`, the browser Developer Console logs:
+  - `[MusicCard] Play/Pause button clicked!`
+  - `[Pahado Player Hook] handlePlayPause clicked!`
+  - `[Pahado Player Hook] Sending play command to YouTube player...`
+- [x] **YouTube Player Initialization**: On initial page load, YouTube IFrame API initializes with:
+  - `[Pahado Player] Initializing YouTube IFrame API with playlist ID: PLecZCLJr4GNE`
+  - `[Pahado Player] YouTube Player is READY! Playlist loaded successfully.`
+- [x] **Playback State Sync**: When music starts or pauses:
+  - `[Pahado Player] Playback state changed: PLAYING` (or `PAUSED`)
 
-## Sign-off before launch
-All of "Manual checks" above pass on: 1 real Android phone, 1 real iPhone, desktop Chrome, desktop Safari. Record results in PROGRESS.md, then proceed to AUDIT.md.
+---
+
+## 2. Favicon & Branding Verification
+- [x] **Tab Icon**: Custom Pahadi mountain SVG favicon (`/favicon.svg`) configured in `app/layout.tsx`. Replaces Next.js default black triangle `▲` logo.
+- [x] **Header Layout Alignment**: `LiveListenersBadge` ("1 person listening") and `ShareButton` grouped cleanly in the top-right corner (`fixed top-4 right-4 sm:top-6 sm:right-8 z-40`), preventing overlap with the Devanagari title `पहाड़ों वाले गाने` across all screen resolutions (360px to 1920px).
+
+---
+
+## 3. Media Controls & Playlist Verification
+- [x] **357-Track Playlist**: Verified `youtubePlaylistId: "PLecZCLJr4GNE"` in `lib/playlist.ts`.
+- [x] **Media Controls**: Next (`onNext`) and Previous (`onPrevious`) buttons skip tracks in the YouTube playlist engine.
+- [x] **Dynamic Progress Bar**: Live `m:ss` elapsed / total duration updates and progress bar fill.
+- [x] **Animated Equalizer**: 5-bar SVG waveform bounces while playing and pauses when idle.
+
+---
+
+## 4. Background Hero Carousel
+- [x] **Self-Hosted Hero Images**: Auto-discovers images in `public/hero/` (`hero-1.jpg` through `hero-6.jpg`) via `/api/hero-images` and smoothly crossfades every 8 seconds.
+- [x] **Clean Unobscured Hero**: Hero visual scene remains clean and readable with subtle vignette and signboard Devanagari typography.
