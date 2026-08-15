@@ -34,10 +34,8 @@ declare global {
     onYouTubeIframeAPIReady?: () => void;
     YT?: {
       Player: new (
-        el: string | HTMLElement,
+        el: string | HTMLIFrameElement,
         opts: {
-          videoId?: string;
-          playerVars?: Record<string, string | number>;
           events?: {
             onReady?: (e: YTPlayerEvent) => void;
             onStateChange?: (e: YTPlayerEvent) => void;
@@ -70,7 +68,6 @@ function parseTrack(rawTitle?: string, author?: string): TrackInfo {
     .replace(/\|\s*.*$/, "")
     .trim();
 
-  // Quoted title e.g. Highway: "Maahi Ve"
   const q = cleaned.match(/(?:(.*?):)?\s*["'"']([^"'"']+)["'"']/);
   if (q) {
     const movie = q[1]?.trim() ?? "";
@@ -88,7 +85,7 @@ function parseTrack(rawTitle?: string, author?: string): TrackInfo {
 }
 
 export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerProps) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const iframeRef = useRef<HTMLIFrameElement | null>(null);
   const playerRef = useRef<YTPlayerInstance | null>(null);
   const onReadyRef = useRef(onPlayerReady);
   const onChangeRef = useRef(onStateChange);
@@ -101,28 +98,33 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
   useEffect(() => {
     let isMounted = true;
 
-    const createPlayer = () => {
-      if (!window.YT?.Player || !containerRef.current || !isMounted) return;
+    // Build embed URL with real origin (client-side only)
+    const origin = window.location.origin;
+    const params = new URLSearchParams({
+      list: PLAYLIST_CONFIG.youtubePlaylistId,
+      enablejsapi: "1",
+      autoplay: "0",
+      controls: "0",
+      disablekb: "1",
+      fs: "0",
+      modestbranding: "1",
+      rel: "0",
+      playsinline: "1",
+      iv_load_policy: "3",
+      origin: origin,
+    });
+    const url = `https://www.youtube.com/embed/videoseries?${params.toString()}`;
 
-      const origin = window.location.origin;
-      console.log("[Pahado Player] Init playlist embed, origin:", origin);
+    // Set iframe src directly via ref (no setState needed)
+    if (iframeRef.current) {
+      iframeRef.current.src = url;
+    }
 
-      playerRef.current = new window.YT.Player(containerRef.current, {
-        playerVars: {
-          list: PLAYLIST_CONFIG.youtubePlaylistId,
-          listType: "playlist",
-          // ↓ CRITICAL — without this YouTube ignores play/pause commands
-          origin: origin,
-          enablejsapi: 1,
-          autoplay: 0,
-          controls: 0,
-          disablekb: 1,
-          fs: 0,
-          modestbranding: 1,
-          rel: 0,
-          playsinline: 1,
-          iv_load_policy: 3,
-        },
+    const attachPlayer = () => {
+      if (!window.YT?.Player || !iframeRef.current || !isMounted) return;
+      console.log("[Pahado Player] Attaching YT API, origin:", origin);
+
+      playerRef.current = new window.YT.Player(iframeRef.current, {
         events: {
           onReady: (e: YTPlayerEvent) => {
             if (!isMounted) return;
@@ -139,14 +141,13 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
               if (d?.title) track = parseTrack(d.title, d.author);
             } catch { /* ignore */ }
 
-            console.log(`[Pahado Player] State ${e.data} | Playing: ${playing} | ${track.title}`);
+            console.log(`[Pahado Player] ${playing ? "▶ PLAYING" : "⏸ PAUSED"}: ${track.title}`);
             onChangeRef.current?.(playing, track);
           },
           onError: (e: YTPlayerEvent) => {
             console.warn("[Pahado Player] ⚠️ Error:", e.data);
-            // 100 = not found, 101/150 = embed blocked — skip to next
             if (e.data === 100 || e.data === 101 || e.data === 150 || e.data === 5) {
-              console.log("[Pahado Player] Skipping restricted/unavailable video...");
+              console.log("[Pahado Player] Skipping restricted video...");
               setTimeout(() => {
                 if (isMounted && playerRef.current?.nextVideo) {
                   playerRef.current.nextVideo();
@@ -161,7 +162,7 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
     };
 
     if (window.YT?.Player) {
-      createPlayer();
+      attachPlayer();
     } else {
       if (!document.getElementById("yt-iframe-api")) {
         const s = document.createElement("script");
@@ -172,7 +173,7 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
       const prev = window.onYouTubeIframeAPIReady;
       window.onYouTubeIframeAPIReady = () => {
         prev?.();
-        if (isMounted) createPlayer();
+        if (isMounted) attachPlayer();
       };
     }
 
@@ -183,11 +184,15 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
   }, []);
 
   return (
-    <div
-      ref={containerRef}
+    // Render iframe with empty src — useEffect sets the real src with origin
+    <iframe
+      ref={iframeRef}
       id="youtube-hidden-player"
+      src="about:blank"
+      title="Pahado Wale Gaane Player"
+      allow="autoplay; encrypted-media"
       aria-hidden="true"
-      className="fixed bottom-0 right-0 w-16 h-16 opacity-0 pointer-events-none -z-50 overflow-hidden"
+      className="fixed bottom-0 right-0 w-1 h-1 opacity-0 pointer-events-none -z-50"
     />
   );
 }
