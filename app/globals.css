@@ -22,12 +22,28 @@ body {
   100% { transform: scale(1) translate(0, 0); }
 }
 
+@keyframes soft-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(232, 163, 61, 0.4);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow: 0 0 25px 8px rgba(232, 163, 61, 0.6);
+  }
+}
+
 .animate-slow-drift {
   animation: slow-drift 30s ease-in-out infinite alternate;
 }
 
+.animate-soft-pulse {
+  animation: soft-pulse 2.5s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-slow-drift {
+  .animate-slow-drift,
+  .animate-soft-pulse {
     animation: none;
   }
 }

@@ -27,3 +27,10 @@ Did: Built full-bleed `components/PlayerScene.tsx` with Devanagari/Latin wordmar
 Decisions made: Implemented a temporary gradient treatment matching palette tokens until background image is connected.
 Blocked on / open questions: None for PlayerScene.
 Files touched: `components/PlayerScene.tsx`, `app/page.tsx`, `PROGRESS.md`
+
+## [2026-08-15 13:17] — Antigravity
+Task(s) worked: [2. Design → code - PlayButton](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/TASKS.md#2-design--code-via-stitch--antigravity)
+Did: Built reusable `components/PlayButton.tsx` styled like a vintage radio dial knob with mustard-gold theme accent, tactile grooves, SVG play/pause icons, Devanagari label ("🎵 बजाओ" / "रुकिए"), keyboard focus indicators, and soft pulse glow animation when idle (`animate-soft-pulse`).
+Decisions made: Added `soft-pulse` animation keyframes in `app/globals.css` with `@media (prefers-reduced-motion: reduce)` support.
+Blocked on / open questions: None for PlayButton.
+Files touched: `components/PlayButton.tsx`, `app/globals.css`, `PROGRESS.md`
