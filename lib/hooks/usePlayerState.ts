@@ -2,12 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { PLAYLIST_CONFIG } from "@/lib/playlist";
-import type { YTPlayerInstance } from "@/components/YouTubePlayer";
-
-export interface TrackInfo {
-  title: string;
-  artist: string;
-}
+import type { YTPlayerInstance, TrackInfo } from "@/components/YouTubePlayer";
 
 export function usePlayerState() {
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
@@ -15,122 +10,106 @@ export function usePlayerState() {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [currentTrack, setCurrentTrack] = useState<TrackInfo>(PLAYLIST_CONFIG.fallbackTrack);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+
   const ytPlayerRef = useRef<YTPlayerInstance | null>(null);
 
+  // Keep window-level shuffle flag in sync (read by YouTubePlayer for auto-advance)
+  useEffect(() => {
+    window._pahado_is_shuffle = isShuffle;
+  }, [isShuffle]);
+
   const handleYTReady = useCallback((playerInstance: YTPlayerInstance) => {
-    console.log("[Pahado Player Hook] handleYTReady called with playerInstance:", playerInstance);
+    console.log("[Pahado Player Hook] handleYTReady ✅ — player is ready.");
     ytPlayerRef.current = playerInstance;
   }, []);
 
   const handleYTStateChange = useCallback((playing: boolean, trackData?: TrackInfo) => {
-    console.log(`[Pahado Player Hook] handleYTStateChange -> playing: ${playing}`, trackData);
     setIsPlaying(playing);
     if (trackData) {
       setCurrentTrack(trackData);
     }
   }, []);
 
+  const handleTrackIndexChange = useCallback((index: number) => {
+    setCurrentIndex(index);
+    const curated = PLAYLIST_CONFIG.tracks[index];
+    if (curated) {
+      setCurrentTrack({ title: curated.title, artist: curated.artist });
+    }
+  }, []);
+
   // Poll YouTube player progress when playing
   useEffect(() => {
     if (!isPlaying) return;
-
     const interval = setInterval(() => {
       if (ytPlayerRef.current) {
         try {
-          if (typeof ytPlayerRef.current.getCurrentTime === "function") {
-            const curr = ytPlayerRef.current.getCurrentTime() || 0;
-            setCurrentTime(Math.floor(curr));
-          }
-          if (typeof ytPlayerRef.current.getDuration === "function") {
-            const dur = ytPlayerRef.current.getDuration() || 0;
-            if (dur > 0) setDuration(Math.floor(dur));
-          }
+          const curr = ytPlayerRef.current.getCurrentTime?.() ?? 0;
+          setCurrentTime(Math.floor(curr));
+          const dur = ytPlayerRef.current.getDuration?.() ?? 0;
+          if (dur > 0) setDuration(Math.floor(dur));
         } catch {
           // ignore
         }
       }
     }, 1000);
-
     return () => clearInterval(interval);
   }, [isPlaying]);
 
-  const handlePlayPause = useCallback(() => {
-    console.log("[Pahado Player Hook] handlePlayPause clicked! Current isPlaying state:", isPlaying);
-    console.log("[Pahado Player Hook] ytPlayerRef.current status:", ytPlayerRef.current);
+  // ── Controls ──────────────────────────────────────────────────────────────
 
+  const handlePlayPause = useCallback(() => {
+    console.log("[Pahado Player Hook] Play/Pause clicked — isPlaying:", isPlaying);
     if (!ytPlayerRef.current) {
-      console.warn("[Pahado Player Hook] YouTube player reference is not ready yet!");
+      console.warn("[Pahado Player Hook] Player not ready yet!");
       return;
     }
-
     try {
       if (isPlaying) {
-        console.log("[Pahado Player Hook] Sending pause command to YouTube player...");
         ytPlayerRef.current.pauseVideo();
       } else {
-        console.log("[Pahado Player Hook] Sending play command to YouTube player...");
         ytPlayerRef.current.playVideo();
       }
     } catch (err) {
-      console.error("[Pahado Player Hook] Error toggling play/pause:", err);
-      setIsPlaying(!isPlaying);
+      console.error("[Pahado Player Hook] play/pause error:", err);
     }
   }, [isPlaying]);
 
   const handleNext = useCallback(() => {
-    console.log("[Pahado Player Hook] handleNext clicked!");
-    if (ytPlayerRef.current) {
-      try {
-        if (typeof ytPlayerRef.current.nextVideo === "function") {
-          ytPlayerRef.current.nextVideo();
-        }
-      } catch (err) {
-        console.error("[Pahado Player Hook] Error calling nextVideo:", err);
-      }
+    const tracks = PLAYLIST_CONFIG.tracks;
+    let nextIdx: number;
+    if (isShuffle && tracks.length > 1) {
+      let r = Math.floor(Math.random() * tracks.length);
+      if (r === currentIndex) r = (r + 1) % tracks.length;
+      nextIdx = r;
+    } else {
+      nextIdx = (currentIndex + 1) % tracks.length;
     }
-  }, []);
+    console.log("[Pahado Player Hook] Next → index", nextIdx);
+    // Delegate to YouTubePlayer's queue loader
+    const loader = (window as Window & { _pahado_loadIndex?: (i: number) => void })._pahado_loadIndex;
+    loader?.(nextIdx);
+  }, [currentIndex, isShuffle]);
 
   const handlePrevious = useCallback(() => {
-    console.log("[Pahado Player Hook] handlePrevious clicked!");
-    if (ytPlayerRef.current) {
-      try {
-        if (typeof ytPlayerRef.current.previousVideo === "function") {
-          ytPlayerRef.current.previousVideo();
-        }
-      } catch (err) {
-        console.error("[Pahado Player Hook] Error calling previousVideo:", err);
-      }
-    }
-  }, []);
+    const tracks = PLAYLIST_CONFIG.tracks;
+    const prevIdx = ((currentIndex - 1) + tracks.length) % tracks.length;
+    console.log("[Pahado Player Hook] Prev → index", prevIdx);
+    const loader = (window as Window & { _pahado_loadIndex?: (i: number) => void })._pahado_loadIndex;
+    loader?.(prevIdx);
+  }, [currentIndex]);
 
   const handleToggleShuffle = useCallback(() => {
-    const nextShuffle = !isShuffle;
-    console.log(`[Pahado Player Hook] Toggling shuffle: ${nextShuffle}`);
-    setIsShuffle(nextShuffle);
-    if (ytPlayerRef.current && typeof ytPlayerRef.current.setShuffle === "function") {
-      try {
-        ytPlayerRef.current.setShuffle(nextShuffle);
-      } catch (err) {
-        console.error("[Pahado Player Hook] Error toggling shuffle:", err);
-      }
-    }
+    const next = !isShuffle;
+    console.log("[Pahado Player Hook] Shuffle:", next);
+    setIsShuffle(next);
   }, [isShuffle]);
 
-  const handleSelectTrackIndex = useCallback((index: number, videoId?: string) => {
-    console.log(`[Pahado Player Hook] Selecting track index: ${index}, videoId: ${videoId}`);
-    if (ytPlayerRef.current) {
-      try {
-        if (videoId && typeof ytPlayerRef.current.loadVideoById === "function") {
-          ytPlayerRef.current.loadVideoById(videoId);
-        } else if (typeof ytPlayerRef.current.playVideoAt === "function") {
-          ytPlayerRef.current.playVideoAt(index);
-        } else {
-          ytPlayerRef.current.playVideo();
-        }
-      } catch (err) {
-        console.error("[Pahado Player Hook] Error playing video at index/ID:", err);
-      }
-    }
+  const handleSelectTrackIndex = useCallback((index: number) => {
+    console.log("[Pahado Player Hook] Select track index:", index);
+    const loader = (window as Window & { _pahado_loadIndex?: (i: number) => void })._pahado_loadIndex;
+    loader?.(index);
   }, []);
 
   return {
@@ -139,8 +118,10 @@ export function usePlayerState() {
     currentTime,
     duration,
     currentTrack,
+    currentIndex,
     handleYTReady,
     handleYTStateChange,
+    handleTrackIndexChange,
     handlePlayPause,
     handleNext,
     handlePrevious,

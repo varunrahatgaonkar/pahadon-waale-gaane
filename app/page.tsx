@@ -21,6 +21,7 @@ export default function Home() {
     currentTrack,
     handleYTReady,
     handleYTStateChange,
+    handleTrackIndexChange,
     handlePlayPause,
     handleNext,
     handlePrevious,
@@ -78,7 +79,11 @@ export default function Home() {
       />
 
       {/* Headless YouTube Player Engine */}
-      <YouTubePlayer onPlayerReady={handleYTReady} onStateChange={handleYTStateChange} />
+      <YouTubePlayer
+        onPlayerReady={handleYTReady}
+        onStateChange={handleYTStateChange}
+        onTrackIndexChange={handleTrackIndexChange}
+      />
     </PlayerScene>
   );
 }
