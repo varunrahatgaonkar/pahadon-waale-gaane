@@ -103,8 +103,17 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
               onStateChangeRef.current?.(isPlaying, trackInfo);
             },
             onError: (err: YTPlayerEvent) => {
-              console.error("[Pahado Player] YouTube Player error code:", err.data);
-              if (isMounted) {
+              console.warn(`[Pahado Player] YouTube Player error code: ${err.data}`);
+
+              // Error 150 / 101: Video is embed-restricted by owner -> Auto-skip to next track in playlist
+              if (err.data === 150 || err.data === 101 || err.data === 2) {
+                console.log("[Pahado Player] Embed-restricted track detected (Error 150/101), automatically skipping to next track...");
+                setTimeout(() => {
+                  if (playerRef.current && typeof playerRef.current.nextVideo === "function") {
+                    playerRef.current.nextVideo();
+                  }
+                }, 400);
+              } else if (isMounted) {
                 onStateChangeRef.current?.(false);
               }
             },
