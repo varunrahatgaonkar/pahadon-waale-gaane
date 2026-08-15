@@ -1,24 +1,12 @@
-export interface PlaylistConfig {
+export interface TrackMetadata {
   title: string;
-  subtitle: string;
-  description: string;
-  spotifyPlaylistId: string;
-  youtubePlaylistId: string;
-  fallbackTrack: {
-    title: string;
-    artist: string;
-  };
+  artist: string;
 }
 
-export const PLAYLIST_CONFIG: PlaylistConfig = {
-  title: "पहाड़ों वाले गाने",
-  subtitle: "पहाड़ों वाले गाने",
-  description:
-    "gaane jo pahadiyon mein hi sahi lagte the. before Wi-Fi, before Google Maps ki 'no signal', bus ke radio pe yehi bajta tha.",
-  spotifyPlaylistId: "0sPtH0QaSeu2Hcxahtry8K",
-  youtubePlaylistId: "PLpBEVvHYIhR6UfahyxrMpCRoZNYEdavK0",
+export const PLAYLIST_CONFIG = {
+  youtubePlaylistId: "PLecZCLJr4GNE",
   fallbackTrack: {
     title: "पहाड़ों वाले गाने",
-    artist: "Radio Pahad",
-  },
+    artist: "Radio Pahad • FM 92.7",
+  } satisfies TrackMetadata,
 };

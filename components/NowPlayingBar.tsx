@@ -2,17 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 
-export type AudioProvider = "youtube" | "spotify";
-
 export interface NowPlayingBarProps {
   trackTitle?: string;
   artistName?: string;
   isPlaying?: boolean;
-  provider?: AudioProvider;
   onPlayPause?: () => void;
   onNext?: () => void;
   onPrevious?: () => void;
-  onToggleProvider?: (newProvider: AudioProvider) => void;
   className?: string;
 }
 
@@ -20,11 +16,9 @@ export function NowPlayingBar({
   trackTitle = "पहाड़ों वाले गाने",
   artistName = "Radio Pahad",
   isPlaying = false,
-  provider = "youtube",
   onPlayPause,
   onNext,
   onPrevious,
-  onToggleProvider,
   className = "",
 }: NowPlayingBarProps) {
   const [listeners, setListeners] = useState<number>(18);
@@ -125,36 +119,10 @@ export function NowPlayingBar({
         </button>
       </div>
 
-      {/* Audio Provider Selector */}
       <div className="flex items-center justify-end flex-1 sm:flex-initial sm:w-1/3">
-        <div className="inline-flex items-center bg-black/50 p-0.5 rounded-full border border-[#F7EFE2]/10 text-[9px] font-sans">
-          <button
-            type="button"
-            onClick={() => onToggleProvider?.("youtube")}
-            aria-label="Switch to YouTube player"
-            aria-pressed={provider === "youtube"}
-            className={`px-2 py-0.5 rounded-full transition-all duration-200 ${
-              provider === "youtube"
-                ? "bg-[#D97B4C] text-[#F7EFE2] font-semibold"
-                : "text-[#F7EFE2]/40 hover:text-[#F7EFE2]"
-            } focus:outline-none focus-visible:ring-1 focus-visible:ring-[#E8A33D]`}
-          >
-            YouTube
-          </button>
-          <button
-            type="button"
-            onClick={() => onToggleProvider?.("spotify")}
-            aria-label="Switch to Spotify player"
-            aria-pressed={provider === "spotify"}
-            className={`px-2 py-0.5 rounded-full transition-all duration-200 ${
-              provider === "spotify"
-                ? "bg-[#1DB954] text-white font-semibold"
-                : "text-[#F7EFE2]/40 hover:text-[#F7EFE2]"
-            } focus:outline-none focus-visible:ring-1 focus-visible:ring-[#1DB954]`}
-          >
-            Spotify
-          </button>
-        </div>
+        <span className="font-mono text-[10px] text-[#F7EFE2]/50 uppercase tracking-widest">
+          RADIO PAHAD • FM 92.7
+        </span>
       </div>
     </footer>
   );

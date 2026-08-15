@@ -2,9 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import { PLAYLIST_CONFIG } from "@/lib/playlist";
-import type { AudioProvider } from "@/components/NowPlayingBar";
 import type { YTPlayerInstance } from "@/components/YouTubePlayer";
-import type { SpotifyControllerInstance } from "@/components/SpotifyEmbed";
 
 export interface TrackInfo {
   title: string;
@@ -12,45 +10,26 @@ export interface TrackInfo {
 }
 
 export function usePlayerState() {
-  const [provider, setProvider] = useState<AudioProvider>("youtube");
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [currentTrack, setCurrentTrack] = useState<TrackInfo>(PLAYLIST_CONFIG.fallbackTrack);
   const ytPlayerRef = useRef<YTPlayerInstance | null>(null);
-  const spotifyControllerRef = useRef<SpotifyControllerInstance | null>(null);
 
   const handleYTReady = useCallback((playerInstance: YTPlayerInstance) => {
     ytPlayerRef.current = playerInstance;
   }, []);
 
   const handleYTStateChange = useCallback((playing: boolean, trackData?: TrackInfo) => {
-    if (provider === "youtube") {
-      setIsPlaying(playing);
-      if (trackData) {
-        setCurrentTrack(trackData);
-      }
+    setIsPlaying(playing);
+    if (trackData) {
+      setCurrentTrack(trackData);
     }
-  }, [provider]);
-
-  const handleSpotifyReady = useCallback((controllerInstance: SpotifyControllerInstance) => {
-    spotifyControllerRef.current = controllerInstance;
   }, []);
-
-  const handleSpotifyStateChange = useCallback(
-    (playing: boolean, positionSec?: number, durationSec?: number) => {
-      if (provider === "spotify") {
-        setIsPlaying(playing);
-        if (typeof positionSec === "number") setCurrentTime(positionSec);
-        if (typeof durationSec === "number" && durationSec > 0) setDuration(durationSec);
-      }
-    },
-    [provider]
-  );
 
   // Poll YouTube player progress when playing
   useEffect(() => {
-    if (provider !== "youtube" || !isPlaying) return;
+    if (!isPlaying) return;
 
     const interval = setInterval(() => {
       if (ytPlayerRef.current) {
@@ -70,78 +49,23 @@ export function usePlayerState() {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [provider, isPlaying]);
-
-  // Enforce single-provider playback rule
-  const handleToggleProvider = useCallback(
-    (newProvider: AudioProvider) => {
-      if (newProvider === provider) return;
-
-      if (provider === "youtube" && ytPlayerRef.current) {
-        try {
-          if (typeof ytPlayerRef.current.pauseVideo === "function") {
-            ytPlayerRef.current.pauseVideo();
-          }
-        } catch {
-          // ignore
-        }
-      } else if (provider === "spotify" && spotifyControllerRef.current) {
-        try {
-          if (typeof spotifyControllerRef.current.pause === "function") {
-            spotifyControllerRef.current.pause();
-          }
-        } catch {
-          // ignore
-        }
-      }
-
-      setIsPlaying(false);
-      setCurrentTime(0);
-      setDuration(0);
-      setProvider(newProvider);
-
-      if (newProvider === "spotify") {
-        setCurrentTrack({
-          title: "Spotify Mountain Playlist",
-          artist: "Pahado Wale Gaane",
-        });
-      } else {
-        setCurrentTrack(PLAYLIST_CONFIG.fallbackTrack);
-      }
-    },
-    [provider]
-  );
+  }, [isPlaying]);
 
   const handlePlayPause = useCallback(() => {
-    if (provider === "youtube") {
-      if (!ytPlayerRef.current) return;
-      try {
-        if (isPlaying) {
-          ytPlayerRef.current.pauseVideo();
-        } else {
-          ytPlayerRef.current.playVideo();
-        }
-      } catch {
-        setIsPlaying(!isPlaying);
+    if (!ytPlayerRef.current) return;
+    try {
+      if (isPlaying) {
+        ytPlayerRef.current.pauseVideo();
+      } else {
+        ytPlayerRef.current.playVideo();
       }
-    } else if (provider === "spotify") {
-      if (!spotifyControllerRef.current) return;
-      try {
-        if (typeof spotifyControllerRef.current.togglePlay === "function") {
-          spotifyControllerRef.current.togglePlay();
-        } else if (isPlaying) {
-          spotifyControllerRef.current.pause();
-        } else {
-          spotifyControllerRef.current.play();
-        }
-      } catch {
-        setIsPlaying(!isPlaying);
-      }
+    } catch {
+      setIsPlaying(!isPlaying);
     }
-  }, [provider, isPlaying]);
+  }, [isPlaying]);
 
   const handleNext = useCallback(() => {
-    if (provider === "youtube" && ytPlayerRef.current) {
+    if (ytPlayerRef.current) {
       try {
         if (typeof ytPlayerRef.current.nextVideo === "function") {
           ytPlayerRef.current.nextVideo();
@@ -150,10 +74,10 @@ export function usePlayerState() {
         // ignore
       }
     }
-  }, [provider]);
+  }, []);
 
   const handlePrevious = useCallback(() => {
-    if (provider === "youtube" && ytPlayerRef.current) {
+    if (ytPlayerRef.current) {
       try {
         if (typeof ytPlayerRef.current.previousVideo === "function") {
           ytPlayerRef.current.previousVideo();
@@ -162,19 +86,15 @@ export function usePlayerState() {
         // ignore
       }
     }
-  }, [provider]);
+  }, []);
 
   return {
-    provider,
     isPlaying,
     currentTime,
     duration,
     currentTrack,
     handleYTReady,
     handleYTStateChange,
-    handleSpotifyReady,
-    handleSpotifyStateChange,
-    handleToggleProvider,
     handlePlayPause,
     handleNext,
     handlePrevious,

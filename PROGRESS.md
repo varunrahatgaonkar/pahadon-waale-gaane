@@ -72,7 +72,7 @@ Files touched: `app/globals.css`, `components/PlayerScene.tsx`, `components/Play
 
 ## [2026-08-15 14:00] — Antigravity
 Task(s) worked: [Final Visual Refinement Pass](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/DESIGN.md)
-Did: Bound canonical hero image `public/scene.png` to full-viewport Next.js `Image` component in `PlayerScene.tsx`. Updated memory caption to exact lines ("कुछ गाने रास्तों के लिए होते हैं।" / "बस चलती रहे, गाने बजते रहें।"). Made Spotify embed ultra-compact (`bg-black/80 backdrop-blur-md`), and slimmed `NowPlayingBar.tsx` to ensure scene dominance across mobile and desktop viewports.
+Did: Bound canonical hero image `public/scene.png` to full-viewport Next.js `Image` component in `PlayerScene.tsx`. Updated memory caption to exact lines ("कुछ गाने रास्तों के लिए होते हैं।" / "बस चलती रहे, गाने बजते रहें。"). Made Spotify embed ultra-compact (`bg-black/80 backdrop-blur-md`), and slimmed `NowPlayingBar.tsx` to ensure scene dominance across mobile and desktop viewports.
 Decisions made: Used `/scene.png` as the hero background with minimal gradient overlay (`from-black/50 via-transparent to-black/70`) to preserve artwork visibility while maintaining text contrast.
 Blocked on / open questions: None.
 Files touched: `components/PlayerScene.tsx`, `components/SpotifyEmbed.tsx`, `components/NowPlayingBar.tsx`, `PROGRESS.md`
@@ -118,3 +118,15 @@ Did:
 Decisions made: Used Pusher Channels presence for real live visitor counts; unified player control into bottom MusicCard while keeping hero scene visually clean.
 Blocked on / open questions: None.
 Files touched: `app/api/pusher/auth/route.ts`, `lib/pusher-client.ts`, `lib/hooks/usePresenceCount.ts`, `components/LiveListenersBadge.tsx`, `components/MusicCard.tsx`, `components/PlayerScene.tsx`, `components/SpotifyEmbed.tsx`, `components/YouTubePlayer.tsx`, `lib/hooks/usePlayerState.ts`, `app/page.tsx`, `PROGRESS.md`
+
+## [2026-08-15 16:50] — Antigravity
+Task(s) worked: [Google Stitch Redesign, Top Navigation Anchoring, Spotify Removal & 357 Tracks YouTube Playlist](file:///c:/Users/rahat/OneDrive/Documents/pahado-wale-gaane/DESIGN.md)
+Did:
+1. Executed complete UI redesign using Google Stitch (`StitchMCP` project `12690857750740200041`), generating design system tokens (`#FFD7A9` Golden Hour Cream, `#FFB347` Golden Amber Glow, `#121416` Charcoal Slate Glass).
+2. Redesigned `MusicCard.tsx` into a compact, space-efficient floating dashboard with 5-bar bouncing animated equalizer, spinning vinyl disc thumbnail, real time progress bar, and retro Play/Pause knob.
+3. Fixed top navigation: anchored `ShareButton` to top-right corner and `LiveListenersBadge` to top-center edge (`fixed top-4 sm:top-6 z-40`).
+4. Extracted all original 93 Spotify tracks into `SPOTIFY_TRACKS.md` backup file, then removed Spotify integration completely.
+5. Connected YouTube playlist ID `PLecZCLJr4GNE` (357 combined mountain road trip tracks) in `lib/playlist.ts`.
+Decisions made: Standardized audio engine on YouTube with new 357-track playlist; anchored top controls to viewport top edge.
+Blocked on / open questions: None.
+Files touched: `lib/playlist.ts`, `components/MusicCard.tsx`, `components/PlayerScene.tsx`, `components/NowPlayingBar.tsx`, `app/page.tsx`, `SPOTIFY_TRACKS.md`, `PROGRESS.md`

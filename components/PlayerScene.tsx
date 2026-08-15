@@ -7,31 +7,31 @@ interface PlayerSceneProps {
 
 export function PlayerScene({ children }: PlayerSceneProps) {
   return (
-    <div className="relative w-full h-screen overflow-hidden bg-[#1f2d25] select-none flex flex-col justify-between">
+    <div className="relative w-full h-screen overflow-hidden bg-[#121416] select-none flex flex-col justify-between">
       {/* Primary Hero Scene Image Carousel */}
       <HeroCarousel />
 
-      {/* Light atmospheric vignette for contrast & readability without obscuring artwork */}
+      {/* Atmospheric vignette for depth & contrast */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70 pointer-events-none z-0"
+        className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none z-0"
       />
 
       {/* Header - Devanagari Title & Memory Caption */}
       <header className="relative z-10 p-6 md:p-10 max-w-xl flex flex-col items-start space-y-1.5 pointer-events-auto">
-        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl text-[#F7EFE2] text-signboard-shadow tracking-wide leading-tight">
+        <h1 className="font-serif text-4xl sm:text-5xl md:text-6xl text-[#ffd7a9] text-signboard-shadow tracking-wide leading-tight font-bold">
           पहाड़ों वाले गाने
         </h1>
-        <p className="font-sans text-xs md:text-sm text-[#E8A33D] font-bold tracking-widest uppercase text-caption-shadow">
+        <p className="font-sans text-xs md:text-sm text-[#ffb347] font-bold tracking-widest uppercase text-caption-shadow">
           PAHADO WALE GAANE
         </p>
 
         {/* Nostalgic Memory Caption */}
         <div className="pt-2 flex flex-col space-y-1 text-caption-shadow">
-          <p className="font-sans text-sm sm:text-base text-[#F7EFE2] font-medium tracking-wide">
+          <p className="font-sans text-sm sm:text-base text-[#e2e2e5] font-medium tracking-wide italic opacity-90">
             &ldquo;woh gaane jo signal jaane ke baad bhi yaad rehte the.&rdquo;
           </p>
-          <p className="font-sans text-xs sm:text-sm text-[#F7EFE2]/75 font-normal tracking-wide">
+          <p className="font-sans text-xs sm:text-sm text-[#e2e2e5]/75 font-normal tracking-wide">
             बस चलती रहे, गाने बजते रहें।
           </p>
         </div>
