@@ -28,6 +28,7 @@ declare global {
         options: {
           height?: string | number;
           width?: string | number;
+          host?: string;
           playerVars?: Record<string, string | number>;
           events?: {
             onReady?: (event: YTPlayerEvent) => void;
@@ -66,9 +67,12 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
     const initPlayer = () => {
       if (!window.YT || !window.YT.Player) return;
 
+      const origin = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
+
       playerRef.current = new window.YT.Player("youtube-hidden-player", {
         height: "1",
         width: "1",
+        host: "https://www.youtube.com",
         playerVars: {
           listType: "playlist",
           list: PLAYLIST_CONFIG.youtubePlaylistId,
@@ -78,6 +82,8 @@ export function YouTubePlayer({ onPlayerReady, onStateChange }: YouTubePlayerPro
           fs: 0,
           modestbranding: 1,
           rel: 0,
+          enablejsapi: 1,
+          origin: origin,
         },
         events: {
           onReady: (event: YTPlayerEvent) => {
