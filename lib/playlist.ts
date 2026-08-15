@@ -6,8 +6,11 @@ export interface TrackMetadata {
 }
 
 export const PLAYLIST_CONFIG = {
-  // Your YouTube playlist — all playback uses this directly
-  youtubePlaylistId: "PLecZCLJr4GNE",
+  // Your YouTube playlist
+  youtubePlaylistId: "PLQdfb6nEJz_X-0Tkwec2N2Sj83d_DM36d",
+
+  // Start playback from this video ID (Ilahi - Yeh Jawaani Hai Deewani)
+  startVideoId: "6w67NOaRe-w",
 
   fallbackTrack: {
     title: "पहाड़ों वाले गाने",
