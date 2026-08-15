@@ -24,7 +24,14 @@ export async function GET() {
 
     const finalImages = images.length > 0 ? images : ["/hero/hero-1.jpg"];
 
-    return NextResponse.json({ images: finalImages });
+    return NextResponse.json(
+      { images: finalImages },
+      {
+        headers: {
+          "Cache-Control": "public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400",
+        },
+      }
+    );
   } catch (err) {
     console.error("Failed to read hero images:", err);
     return NextResponse.json({ images: ["/hero/hero-1.jpg"] });

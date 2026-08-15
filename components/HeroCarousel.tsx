@@ -38,14 +38,14 @@ export function HeroCarousel() {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-0 w-full h-full animate-slow-drift origin-center pointer-events-none z-0"
+      className="absolute inset-0 w-full h-full animate-slow-drift origin-center pointer-events-none z-0 transform-gpu"
     >
       {images.map((imgSrc, idx) => {
         const isActive = idx === currentIndex;
         return (
           <div
             key={imgSrc}
-            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out ${
+            className={`absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out will-change-[opacity] ${
               isActive ? "opacity-100 z-10" : "opacity-0 z-0"
             }`}
           >
@@ -54,6 +54,7 @@ export function HeroCarousel() {
               alt="Pahado Wale Gaane - Mountain Scene"
               fill
               priority={idx === 0}
+              quality={80}
               sizes="100vw"
               className="object-cover object-center filter brightness-[0.92] contrast-[1.05]"
             />
