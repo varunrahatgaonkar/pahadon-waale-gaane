@@ -6,7 +6,7 @@ export interface TrackMetadata {
 }
 
 export const PLAYLIST_CONFIG = {
-  youtubePlaylistId: "PLQdfb6nEJz_X-0Tkwec2N2Sj83d_DM36d",
+  youtubePlaylistId: "PLcwotpnLerAU",
 
   fallbackTrack: {
     title: "पहाड़ों वाले गाने",
@@ -21,7 +21,7 @@ export const PLAYLIST_CONFIG = {
   // IDs sourced from YouTube search — verified to be real video IDs.
   // ─────────────────────────────────────────────────────────────────────────
   tracks: [
-    { id: "fmmuhxx-IQA", title: "Namo Namo", artist: "Kedarnath • Amit Trivedi", duration: "5:22" },
+    { id: "Z_-lSJg52NU", title: "Namo Namo", artist: "Kedarnath • Amit Trivedi", duration: "5:22" },
     { id: "fdubeMFwuGs", title: "Ilahi", artist: "Yeh Jawaani Hai Deewani • Arijit Singh", duration: "3:48" },
     { id: "jHNNsd7397w", title: "Kabira (Encore)", artist: "Yeh Jawaani Hai Deewani • Arijit Singh", duration: "4:29" },
     { id: "FqS_N9j4F3w", title: "Subhanallah", artist: "Yeh Jawaani Hai Deewani • Sreerama Chandra", duration: "4:09" },
